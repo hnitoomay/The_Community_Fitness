@@ -1,0 +1,41 @@
+food_name,meal_category,serving_description,calories,protein_grams,allergen,status,review_required,review_notes
+Boiled Egg,Breakfast,2 eggs,140,12,Egg,Active,false,Estimated calories and protein for a simple serving.
+Oatmeal,Breakfast,1 cup,150,5,Gluten,Active,false,Estimated calories and protein for a simple serving.
+Whole-Wheat Bread,Breakfast,2 slices,160,8,Gluten,Active,false,Estimated calories and protein for a simple serving.
+Plain Yogurt,Breakfast,1 cup,120,9,Milk,Active,false,Estimated calories and protein for a simple serving.
+Mohinga,Breakfast,1 bowl,320,14,Fish,Active,true,Estimated calories and protein. Manual nutrition review recommended for this local mixed dish.
+Milk,Breakfast,1 cup,120,8,Milk,Active,false,Estimated calories and protein for a simple serving.
+Rice Porridge,Breakfast,1 bowl,180,5,None,Active,true,Estimated calories and protein. Manual nutrition review recommended for this mixed meal.
+Papaya,Breakfast,1 cup,55,1,None,Active,false,Estimated calories and protein for a simple serving.
+Grilled Chicken Breast,Lunch,100 g,165,31,None,Active,false,Estimated calories and protein for a simple serving.
+Fish Curry,Lunch,1 bowl,260,24,Fish,Active,true,Estimated calories and protein. Manual nutrition review recommended for this local mixed dish.
+White Rice,Lunch,1 cup,205,4,None,Active,false,Estimated calories and protein for a simple serving.
+Brown Rice,Lunch,1 cup,215,5,None,Active,false,Estimated calories and protein for a simple serving.
+Mixed Vegetables,Lunch,1 cup,90,3,None,Active,false,Estimated calories and protein for a simple serving.
+Green Salad,Lunch,1 bowl,80,2,None,Active,false,Estimated calories and protein for a simple serving.
+Tea Leaf Salad,Lunch,1 bowl,220,6,"Peanuts, Sesame",Active,true,Estimated calories and protein. Manual nutrition review recommended for this local mixed dish.
+Shan Noodles,Lunch,1 bowl,430,18,Gluten,Active,true,Estimated calories and protein. Manual nutrition review recommended for this local mixed dish.
+Steamed Fish,Dinner,100 g,140,26,Fish,Active,false,Estimated calories and protein for a simple serving.
+Tofu,Dinner,100 g,90,10,Soy,Active,false,Estimated calories and protein for a simple serving.
+Sweet Potato,Dinner,100 g,90,2,None,Active,false,Estimated calories and protein for a simple serving.
+Chicken Soup,Dinner,1 bowl,180,18,None,Active,true,Estimated calories and protein. Manual nutrition review recommended for this mixed meal.
+Lentil Soup,Dinner,1 bowl,190,11,None,Active,true,Estimated calories and protein. Manual nutrition review recommended for this mixed meal.
+Stir-Fried Mixed Vegetables,Dinner,1 cup,120,4,None,Active,true,Estimated calories and protein. Manual nutrition review recommended for this mixed meal.
+Pumpkin Soup,Dinner,1 bowl,110,3,None,Active,true,Estimated calories and protein. Manual nutrition review recommended for this mixed meal.
+Chicken Curry,Dinner,1 bowl,280,23,None,Active,true,Estimated calories and protein. Manual nutrition review recommended for this local mixed dish.
+Banana,Snack,1 piece,105,1,None,Active,false,Estimated calories and protein for a simple serving.
+Apple,Snack,1 piece,95,0,None,Active,false,Estimated calories and protein for a simple serving.
+Almonds,Snack,30 g,170,6,Tree Nuts,Active,false,Estimated calories and protein for a simple serving.
+Peanuts,Snack,30 g,170,7,Peanuts,Active,false,Estimated calories and protein for a simple serving.
+Roasted Chickpeas,Snack,30 g,120,6,None,Active,false,Estimated calories and protein for a simple serving.
+Cottage Cheese,Snack,1 cup,180,24,Milk,Active,false,Estimated calories and protein for a simple serving.
+Cucumber Sticks,Snack,1 cup,20,1,None,Active,false,Estimated calories and protein for a simple serving.
+Orange,Snack,1 piece,62,1,None,Active,false,Estimated calories and protein for a simple serving.
+Water,Drink,1 glass,0,0,None,Active,false,Estimated calories and protein for a simple serving.
+Green Tea,Drink,1 cup,2,0,None,Active,false,Estimated calories and protein for a simple serving.
+Black Coffee,Drink,1 cup,5,0,None,Active,false,Estimated calories and protein for a simple serving.
+Fresh Lime Water,Drink,1 glass,10,0,None,Active,false,Estimated calories and protein for a simple serving.
+Soy Milk,Drink,1 cup,100,7,Soy,Active,false,Estimated calories and protein for a simple serving.
+Coconut Water,Drink,1 glass,45,1,None,Active,false,Estimated calories and protein for a simple serving.
+Unsweetened Tea,Drink,1 cup,2,0,None,Active,false,Estimated calories and protein for a simple serving.
+Protein Shake,Drink,1 glass,180,24,Milk,Active,true,Estimated calories and protein. Manual nutrition review recommended because protein powder and recipe can vary.

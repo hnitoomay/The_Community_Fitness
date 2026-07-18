@@ -1,0 +1,175 @@
+exercise_name,equipment_source_number,equipment_name,required_equipment,review_notes
+Dumbbell Bench Press,16,Dumbbell 10kg,true,Compatible dumbbell option for pressing.
+Dumbbell Bench Press,18,Dumbbell 15kg,true,Compatible dumbbell option for pressing.
+Dumbbell Bench Press,20,Dumbbell 20kg,true,Compatible dumbbell option for pressing.
+Dumbbell Bench Press,22,Dumbbell 25kg,true,Compatible dumbbell option for pressing.
+Dumbbell Bench Press,24,Dumbbell 30kg,true,Compatible dumbbell option for pressing.
+Dumbbell Bench Press,26,Dumbbell 35kg,true,Compatible dumbbell option for pressing.
+Dumbbell Bench Press,27,Dumbbell 37.5kg,true,Compatible dumbbell option for pressing.
+Dumbbell Bench Press,47,Flat Bench,true,
+Incline Dumbbell Press,16,Dumbbell 10kg,true,Compatible dumbbell option for incline pressing.
+Incline Dumbbell Press,18,Dumbbell 15kg,true,Compatible dumbbell option for incline pressing.
+Incline Dumbbell Press,20,Dumbbell 20kg,true,Compatible dumbbell option for incline pressing.
+Incline Dumbbell Press,22,Dumbbell 25kg,true,Compatible dumbbell option for incline pressing.
+Incline Dumbbell Press,24,Dumbbell 30kg,true,Compatible dumbbell option for incline pressing.
+Incline Dumbbell Press,26,Dumbbell 35kg,true,Compatible dumbbell option for incline pressing.
+Incline Dumbbell Press,27,Dumbbell 37.5kg,true,Compatible dumbbell option for incline pressing.
+Incline Dumbbell Press,48,Incline Bench,true,
+Decline Dumbbell Press,16,Dumbbell 10kg,true,Compatible dumbbell option for decline pressing.
+Decline Dumbbell Press,18,Dumbbell 15kg,true,Compatible dumbbell option for decline pressing.
+Decline Dumbbell Press,20,Dumbbell 20kg,true,Compatible dumbbell option for decline pressing.
+Decline Dumbbell Press,22,Dumbbell 25kg,true,Compatible dumbbell option for decline pressing.
+Decline Dumbbell Press,24,Dumbbell 30kg,true,Compatible dumbbell option for decline pressing.
+Decline Dumbbell Press,26,Dumbbell 35kg,true,Compatible dumbbell option for decline pressing.
+Decline Dumbbell Press,27,Dumbbell 37.5kg,true,Compatible dumbbell option for decline pressing.
+Decline Dumbbell Press,76,Adjustable Decline Bench,true,
+Dumbbell Fly,14,Dumbbell 5Kg,true,Compatible dumbbell option for fly movement.
+Dumbbell Fly,15,Dumbbell 7.5kg,true,Compatible dumbbell option for fly movement.
+Dumbbell Fly,16,Dumbbell 10kg,true,Compatible dumbbell option for fly movement.
+Dumbbell Fly,17,Dumbbell 12.5kg,true,Compatible dumbbell option for fly movement.
+Dumbbell Fly,18,Dumbbell 15kg,true,Compatible dumbbell option for fly movement.
+Dumbbell Fly,19,Dumbbell 17.5kg,true,Compatible dumbbell option for fly movement.
+Dumbbell Fly,20,Dumbbell 20kg,true,Compatible dumbbell option for fly movement.
+Dumbbell Fly,21,Dumbbell 22.5kg,true,Compatible dumbbell option for fly movement.
+Dumbbell Fly,22,Dumbbell 25kg,true,Compatible dumbbell option for fly movement.
+Dumbbell Fly,47,Flat Bench,true,
+Smith Machine Bench Press,4,Smith Machine,true,
+Smith Machine Bench Press,47,Flat Bench,true,
+Cable Chest Fly,3,5 Station Multi Jungle,true,
+TRX Row,56,TRX Rope,true,
+Dumbbell Bent-Over Row,16,Dumbbell 10kg,true,Compatible dumbbell option for rowing.
+Dumbbell Bent-Over Row,18,Dumbbell 15kg,true,Compatible dumbbell option for rowing.
+Dumbbell Bent-Over Row,20,Dumbbell 20kg,true,Compatible dumbbell option for rowing.
+Dumbbell Bent-Over Row,22,Dumbbell 25kg,true,Compatible dumbbell option for rowing.
+Dumbbell Bent-Over Row,24,Dumbbell 30kg,true,Compatible dumbbell option for rowing.
+Dumbbell Bent-Over Row,26,Dumbbell 35kg,true,Compatible dumbbell option for rowing.
+Dumbbell Bent-Over Row,27,Dumbbell 37.5kg,true,Compatible dumbbell option for rowing.
+One-Arm Dumbbell Row,16,Dumbbell 10kg,true,Compatible dumbbell option for one-arm row.
+One-Arm Dumbbell Row,18,Dumbbell 15kg,true,Compatible dumbbell option for one-arm row.
+One-Arm Dumbbell Row,20,Dumbbell 20kg,true,Compatible dumbbell option for one-arm row.
+One-Arm Dumbbell Row,22,Dumbbell 25kg,true,Compatible dumbbell option for one-arm row.
+One-Arm Dumbbell Row,24,Dumbbell 30kg,true,Compatible dumbbell option for one-arm row.
+One-Arm Dumbbell Row,26,Dumbbell 35kg,true,Compatible dumbbell option for one-arm row.
+One-Arm Dumbbell Row,27,Dumbbell 37.5kg,true,Compatible dumbbell option for one-arm row.
+One-Arm Dumbbell Row,46,Utility Bench,true,
+EZ Bar Bent-Over Row,42,EZ Bar,true,
+Lat Pulldown,3,5 Station Multi Jungle,true,
+Shoulder Press Machine,6,Shoulder Press,true,
+Dumbbell Shoulder Press,14,Dumbbell 5Kg,true,Compatible dumbbell option for shoulder press.
+Dumbbell Shoulder Press,15,Dumbbell 7.5kg,true,Compatible dumbbell option for shoulder press.
+Dumbbell Shoulder Press,16,Dumbbell 10kg,true,Compatible dumbbell option for shoulder press.
+Dumbbell Shoulder Press,17,Dumbbell 12.5kg,true,Compatible dumbbell option for shoulder press.
+Dumbbell Shoulder Press,18,Dumbbell 15kg,true,Compatible dumbbell option for shoulder press.
+Dumbbell Shoulder Press,19,Dumbbell 17.5kg,true,Compatible dumbbell option for shoulder press.
+Dumbbell Shoulder Press,20,Dumbbell 20kg,true,Compatible dumbbell option for shoulder press.
+Dumbbell Shoulder Press,21,Dumbbell 22.5kg,true,Compatible dumbbell option for shoulder press.
+Dumbbell Shoulder Press,22,Dumbbell 25kg,true,Compatible dumbbell option for shoulder press.
+Dumbbell Shoulder Press,73,B - 2 Adjustable Bench,true,
+Dumbbell Lateral Raise,13,Dumbbell 2.5kg,true,Compatible light dumbbell option.
+Dumbbell Lateral Raise,14,Dumbbell 5Kg,true,Compatible light dumbbell option.
+Dumbbell Lateral Raise,15,Dumbbell 7.5kg,true,Compatible light dumbbell option.
+Dumbbell Lateral Raise,16,Dumbbell 10kg,true,Compatible light dumbbell option.
+Dumbbell Lateral Raise,17,Dumbbell 12.5kg,true,Compatible light dumbbell option.
+Dumbbell Lateral Raise,18,Dumbbell 15kg,true,Compatible light dumbbell option.
+Dumbbell Reverse Fly,13,Dumbbell 2.5kg,true,Compatible light dumbbell option.
+Dumbbell Reverse Fly,14,Dumbbell 5Kg,true,Compatible light dumbbell option.
+Dumbbell Reverse Fly,15,Dumbbell 7.5kg,true,Compatible light dumbbell option.
+Dumbbell Reverse Fly,16,Dumbbell 10kg,true,Compatible light dumbbell option.
+Dumbbell Reverse Fly,17,Dumbbell 12.5kg,true,Compatible light dumbbell option.
+Dumbbell Reverse Fly,18,Dumbbell 15kg,true,Compatible light dumbbell option.
+Resistance Loop Lateral Walk,63,Resistance Loop,true,
+Abductor Machine,86,Abductor Machine,true,
+Leg Press Machine,5,Leg Press,true,
+Smith Machine Squat,4,Smith Machine,true,
+Leg Extension Machine,7,Leg Extension,true,
+Dumbbell Romanian Deadlift,16,Dumbbell 10kg,true,Compatible dumbbell option for hip hinge work.
+Dumbbell Romanian Deadlift,18,Dumbbell 15kg,true,Compatible dumbbell option for hip hinge work.
+Dumbbell Romanian Deadlift,20,Dumbbell 20kg,true,Compatible dumbbell option for hip hinge work.
+Dumbbell Romanian Deadlift,22,Dumbbell 25kg,true,Compatible dumbbell option for hip hinge work.
+Dumbbell Romanian Deadlift,24,Dumbbell 30kg,true,Compatible dumbbell option for hip hinge work.
+Dumbbell Romanian Deadlift,26,Dumbbell 35kg,true,Compatible dumbbell option for hip hinge work.
+Dumbbell Romanian Deadlift,27,Dumbbell 37.5kg,true,Compatible dumbbell option for hip hinge work.
+Kettlebell Goblet Squat,65,MD - 2222 - 4 4kg Kettlebell,true,Compatible kettlebell option.
+Kettlebell Goblet Squat,66,MD - 2222 - 6 6kg Kettlebell,true,Compatible kettlebell option.
+Kettlebell Goblet Squat,67,MD - 2222 - 8 8kg Kettlebell,true,Compatible kettlebell option.
+Kettlebell Goblet Squat,68,MD - 2222 - 10 10kg Kettlebell,true,Compatible kettlebell option.
+Kettlebell Goblet Squat,69,MD - 2222 - 12 12kg Kettlebell,true,Compatible kettlebell option.
+Kettlebell Goblet Squat,70,MD - 2222 - 16kg Kettlebell,true,Compatible kettlebell option.
+Kettlebell Goblet Squat,71,MD - 2219 - 20 20kg Kettlebell,true,Compatible kettlebell option.
+Barbell Back Squat,41,Olympic Bar,true,
+Barbell Back Squat,28,Weight Plate 2.5 kg,true,
+Barbell Back Squat,29,Weight Plate 5kg,true,
+Barbell Back Squat,30,Weight Plate 10kg,true,
+Barbell Back Squat,31,Weight Plate 15kg,true,
+Barbell Back Squat,32,Weight Plate 20kg,true,
+Barbell Back Squat,33,Weight Plate 25kg,true,
+Barbell Back Squat,85,Power Rack,true,
+Dumbbell Walking Lunge,14,Dumbbell 5Kg,true,Compatible dumbbell option for lunges.
+Dumbbell Walking Lunge,15,Dumbbell 7.5kg,true,Compatible dumbbell option for lunges.
+Dumbbell Walking Lunge,16,Dumbbell 10kg,true,Compatible dumbbell option for lunges.
+Dumbbell Walking Lunge,17,Dumbbell 12.5kg,true,Compatible dumbbell option for lunges.
+Dumbbell Walking Lunge,18,Dumbbell 15kg,true,Compatible dumbbell option for lunges.
+Dumbbell Walking Lunge,19,Dumbbell 17.5kg,true,Compatible dumbbell option for lunges.
+Dumbbell Walking Lunge,20,Dumbbell 20kg,true,Compatible dumbbell option for lunges.
+Dumbbell Walking Lunge,21,Dumbbell 22.5kg,true,Compatible dumbbell option for lunges.
+Dumbbell Walking Lunge,22,Dumbbell 25kg,true,Compatible dumbbell option for lunges.
+Medicine Ball Russian Twist,34,Medicine Ball 1kg,true,Compatible medicine ball option.
+Medicine Ball Russian Twist,35,Medicine Ball 2kg,true,Compatible medicine ball option.
+Medicine Ball Russian Twist,36,Medicine Ball 6kg,true,Compatible medicine ball option.
+Medicine Ball Russian Twist,37,Medicine Ball 7kg,true,Compatible medicine ball option.
+Medicine Ball Russian Twist,38,Medicine Ball 8kg,true,Compatible medicine ball option.
+Medicine Ball Russian Twist,39,Medicine Ball 9kg,true,Compatible medicine ball option.
+Medicine Ball Russian Twist,40,Medicine Ball 10kg,true,Compatible medicine ball option.
+BOSU Crunch,50,Bosu,true,
+Cable Wood Chop,3,5 Station Multi Jungle,true,
+Treadmill Walking,1,Treadmill,true,
+Treadmill Intervals,1,Treadmill,true,
+Stationary Bike,2,Bike,true,
+Cross Trainer Steady Pace,61,Cross Trainer,true,
+Jump Rope,81,MD - JR027 Cross Jump Rope,true,
+Ladder Machine Climb,60,Ladder Machine,true,
+Agility Ladder Quick Steps,54,Agility Ladder,true,
+Agility Cone Shuffle,55,Agility Cone,true,
+Yoga Stretching,58,Yoga Mat,true,
+Child's Pose,58,Yoga Mat,true,
+Foam Roller Upper Back,62,Foam Roller,true,
+Kettlebell Deadlift,65,MD - 2222 - 4 4kg Kettlebell,true,Compatible kettlebell option.
+Kettlebell Deadlift,66,MD - 2222 - 6 6kg Kettlebell,true,Compatible kettlebell option.
+Kettlebell Deadlift,67,MD - 2222 - 8 8kg Kettlebell,true,Compatible kettlebell option.
+Kettlebell Deadlift,68,MD - 2222 - 10 10kg Kettlebell,true,Compatible kettlebell option.
+Kettlebell Deadlift,69,MD - 2222 - 12 12kg Kettlebell,true,Compatible kettlebell option.
+Kettlebell Deadlift,70,MD - 2222 - 16kg Kettlebell,true,Compatible kettlebell option.
+Kettlebell Deadlift,71,MD - 2219 - 20 20kg Kettlebell,true,Compatible kettlebell option.
+Kettlebell Swing,65,MD - 2222 - 4 4kg Kettlebell,true,Compatible kettlebell option.
+Kettlebell Swing,66,MD - 2222 - 6 6kg Kettlebell,true,Compatible kettlebell option.
+Kettlebell Swing,67,MD - 2222 - 8 8kg Kettlebell,true,Compatible kettlebell option.
+Kettlebell Swing,68,MD - 2222 - 10 10kg Kettlebell,true,Compatible kettlebell option.
+Kettlebell Swing,69,MD - 2222 - 12 12kg Kettlebell,true,Compatible kettlebell option.
+Kettlebell Swing,70,MD - 2222 - 16kg Kettlebell,true,Compatible kettlebell option.
+Kettlebell Swing,71,MD - 2219 - 20 20kg Kettlebell,true,Compatible kettlebell option.
+Dumbbell Thruster,14,Dumbbell 5Kg,true,Compatible dumbbell option for thrusters.
+Dumbbell Thruster,15,Dumbbell 7.5kg,true,Compatible dumbbell option for thrusters.
+Dumbbell Thruster,16,Dumbbell 10kg,true,Compatible dumbbell option for thrusters.
+Dumbbell Thruster,17,Dumbbell 12.5kg,true,Compatible dumbbell option for thrusters.
+Dumbbell Thruster,18,Dumbbell 15kg,true,Compatible dumbbell option for thrusters.
+Dumbbell Thruster,19,Dumbbell 17.5kg,true,Compatible dumbbell option for thrusters.
+Dumbbell Thruster,20,Dumbbell 20kg,true,Compatible dumbbell option for thrusters.
+Dumbbell Thruster,21,Dumbbell 22.5kg,true,Compatible dumbbell option for thrusters.
+Dumbbell Thruster,22,Dumbbell 25kg,true,Compatible dumbbell option for thrusters.
+Slam Ball Slam,78,MD - 1276 - 6 SLAM BALL( 9.4 LB ),true,Compatible slam ball option.
+Slam Ball Slam,79,MD - 1276 - 8 SLAM BALL(13.2 LB ),true,Compatible slam ball option.
+Slam Ball Slam,80,MD - 1276 - 10 SLAM BALL( 22 LB ),true,Compatible slam ball option.
+Battle Rope Waves,44,Functional Rope,true,
+Step Board Toe Taps,74,SPART - Step Board,true,
+Plyo Box Step-Up,72,MD - 6508B Plyo Jump Box,true,
+Fixed Barbell Romanian Deadlift,84,Fixed Barbell (10kg),true,
+Boxing Bag Punches,57,Boxing Gloves,true,
+Boxing Bag Punches,75,LOT - Punching Bag,true,
+Heavy Bag Intervals,57,Boxing Gloves,true,
+Heavy Bag Intervals,75,LOT - Punching Bag,true,
+Boxing Pad Straight Punch Drill,57,Boxing Gloves,true,
+Boxing Pad Straight Punch Drill,89,Boxing Pad,true,
+Kick Pad Knee Strikes,87,Boxing Kick Pad,true,
+Shield Guard Punch Drill,57,Boxing Gloves,true,
+Shield Guard Punch Drill,88,Shield Guard,true,
+

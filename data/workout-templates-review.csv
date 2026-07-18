@@ -1,0 +1,43 @@
+template_name,body_goal_label,days_per_week,difficulty,short_notes,status,day_number,day_type,focus_category,exercise_count
+Beginner Weight Loss Weekly Foundation,Weight Loss,6,Beginner,Cardio-forward weekly structure with repeatable full body sessions and low-friction recovery.,Active,1,Workout,Full Body,5
+Beginner Weight Loss Weekly Foundation,Weight Loss,6,Beginner,Cardio-forward weekly structure with repeatable full body sessions and low-friction recovery.,Active,2,Cardio,Cardio,4
+Beginner Weight Loss Weekly Foundation,Weight Loss,6,Beginner,Cardio-forward weekly structure with repeatable full body sessions and low-friction recovery.,Active,3,Workout,Full Body,5
+Beginner Weight Loss Weekly Foundation,Weight Loss,6,Beginner,Cardio-forward weekly structure with repeatable full body sessions and low-friction recovery.,Active,4,Cardio,Cardio,4
+Beginner Weight Loss Weekly Foundation,Weight Loss,6,Beginner,Cardio-forward weekly structure with repeatable full body sessions and low-friction recovery.,Active,5,Workout,Legs,5
+Beginner Weight Loss Weekly Foundation,Weight Loss,6,Beginner,Cardio-forward weekly structure with repeatable full body sessions and low-friction recovery.,Active,6,Stretching,Stretching,4
+Beginner Weight Loss Weekly Foundation,Weight Loss,6,Beginner,Cardio-forward weekly structure with repeatable full body sessions and low-friction recovery.,Active,7,Rest,Rest,0
+Beginner Lean and Toned Balance,Lean and Toned,5,Beginner,Balanced split with strength conditioning and mobility support.,Active,1,Workout,Full Body,5
+Beginner Lean and Toned Balance,Lean and Toned,5,Beginner,Balanced split with strength conditioning and mobility support.,Active,2,Cardio,Cardio,3
+Beginner Lean and Toned Balance,Lean and Toned,5,Beginner,Balanced split with strength conditioning and mobility support.,Active,3,Workout,Legs,5
+Beginner Lean and Toned Balance,Lean and Toned,5,Beginner,Balanced split with strength conditioning and mobility support.,Active,4,Stretching,Stretching,4
+Beginner Lean and Toned Balance,Lean and Toned,5,Beginner,Balanced split with strength conditioning and mobility support.,Active,5,Workout,Shoulders,4
+Beginner Lean and Toned Balance,Lean and Toned,5,Beginner,Balanced split with strength conditioning and mobility support.,Active,6,Rest,Rest,0
+Beginner Lean and Toned Balance,Lean and Toned,5,Beginner,Balanced split with strength conditioning and mobility support.,Active,7,Rest,Rest,0
+Beginner General Fitness Weekly Foundation,General Fitness,4,Beginner,Simple weekly rhythm built around consistency and recovery.,Active,1,Workout,Full Body,5
+Beginner General Fitness Weekly Foundation,General Fitness,4,Beginner,Simple weekly rhythm built around consistency and recovery.,Active,2,Rest,Rest,0
+Beginner General Fitness Weekly Foundation,General Fitness,4,Beginner,Simple weekly rhythm built around consistency and recovery.,Active,3,Cardio,Cardio,3
+Beginner General Fitness Weekly Foundation,General Fitness,4,Beginner,Simple weekly rhythm built around consistency and recovery.,Active,4,Workout,Full Body,5
+Beginner General Fitness Weekly Foundation,General Fitness,4,Beginner,Simple weekly rhythm built around consistency and recovery.,Active,5,Rest,Rest,0
+Beginner General Fitness Weekly Foundation,General Fitness,4,Beginner,Simple weekly rhythm built around consistency and recovery.,Active,6,Stretching,Stretching,4
+Beginner General Fitness Weekly Foundation,General Fitness,4,Beginner,Simple weekly rhythm built around consistency and recovery.,Active,7,Workout,Core,4
+Beginner Athletic Body Performance Base,Athletic Body,6,Beginner,Performance-oriented week mixing conditioning lower body power and trunk work.,Active,1,Workout,Full Body,5
+Beginner Athletic Body Performance Base,Athletic Body,6,Beginner,Performance-oriented week mixing conditioning lower body power and trunk work.,Active,2,Cardio,Cardio,4
+Beginner Athletic Body Performance Base,Athletic Body,6,Beginner,Performance-oriented week mixing conditioning lower body power and trunk work.,Active,3,Workout,Legs,5
+Beginner Athletic Body Performance Base,Athletic Body,6,Beginner,Performance-oriented week mixing conditioning lower body power and trunk work.,Active,4,Rest,Rest,0
+Beginner Athletic Body Performance Base,Athletic Body,6,Beginner,Performance-oriented week mixing conditioning lower body power and trunk work.,Active,5,Workout,Full Body,5
+Beginner Athletic Body Performance Base,Athletic Body,6,Beginner,Performance-oriented week mixing conditioning lower body power and trunk work.,Active,6,Workout,Core,4
+Beginner Athletic Body Performance Base,Athletic Body,6,Beginner,Performance-oriented week mixing conditioning lower body power and trunk work.,Active,7,Stretching,Stretching,4
+Beginner Muscle Gain Split,Muscle Gain,5,Beginner,Beginner hypertrophy split with separate muscle-group emphasis and spaced recovery.,Active,1,Workout,Chest,5
+Beginner Muscle Gain Split,Muscle Gain,5,Beginner,Beginner hypertrophy split with separate muscle-group emphasis and spaced recovery.,Active,2,Workout,Legs,5
+Beginner Muscle Gain Split,Muscle Gain,5,Beginner,Beginner hypertrophy split with separate muscle-group emphasis and spaced recovery.,Active,3,Rest,Rest,0
+Beginner Muscle Gain Split,Muscle Gain,5,Beginner,Beginner hypertrophy split with separate muscle-group emphasis and spaced recovery.,Active,4,Workout,Back,5
+Beginner Muscle Gain Split,Muscle Gain,5,Beginner,Beginner hypertrophy split with separate muscle-group emphasis and spaced recovery.,Active,5,Workout,Shoulders,4
+Beginner Muscle Gain Split,Muscle Gain,5,Beginner,Beginner hypertrophy split with separate muscle-group emphasis and spaced recovery.,Active,6,Workout,Core,4
+Beginner Muscle Gain Split,Muscle Gain,5,Beginner,Beginner hypertrophy split with separate muscle-group emphasis and spaced recovery.,Active,7,Rest,Rest,0
+Beginner Strength Focus Compound Base,Strength Focus,4,Beginner,Compound-pattern strength week with deliberate rest spacing.,Active,1,Workout,Legs,5
+Beginner Strength Focus Compound Base,Strength Focus,4,Beginner,Compound-pattern strength week with deliberate rest spacing.,Active,2,Rest,Rest,0
+Beginner Strength Focus Compound Base,Strength Focus,4,Beginner,Compound-pattern strength week with deliberate rest spacing.,Active,3,Workout,Chest,5
+Beginner Strength Focus Compound Base,Strength Focus,4,Beginner,Compound-pattern strength week with deliberate rest spacing.,Active,4,Rest,Rest,0
+Beginner Strength Focus Compound Base,Strength Focus,4,Beginner,Compound-pattern strength week with deliberate rest spacing.,Active,5,Workout,Back,5
+Beginner Strength Focus Compound Base,Strength Focus,4,Beginner,Compound-pattern strength week with deliberate rest spacing.,Active,6,Workout,Shoulders,4
+Beginner Strength Focus Compound Base,Strength Focus,4,Beginner,Compound-pattern strength week with deliberate rest spacing.,Active,7,Rest,Rest,0
