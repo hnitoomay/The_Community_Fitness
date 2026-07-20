@@ -3,59 +3,43 @@ BEGIN;
 CREATE TEMP TABLE body_goal_seed_temp (
   label text NOT NULL,
   description text NOT NULL,
-  gender_display text NOT NULL,
-  image_url text,
   status text NOT NULL
 ) ON COMMIT DROP;
 
 INSERT INTO body_goal_seed_temp (
   label,
   description,
-  gender_display,
-  image_url,
   status
 )
 VALUES
   (
     'Weight Loss',
     'Reduce body weight with steady cardio-focused training and repeatable weekly structure.',
-    'All',
-    NULL,
     'Active'
   ),
   (
     'Lean and Toned',
     'Build a leaner and more defined shape through balanced training cardio and mobility.',
-    'All',
-    NULL,
     'Active'
   ),
   (
     'General Fitness',
     'Improve daily energy baseline strength and weekly exercise consistency.',
-    'All',
-    NULL,
     'Active'
   ),
   (
     'Athletic Body',
     'Develop a more performance-oriented physique with conditioning agility and core support.',
-    'All',
-    NULL,
     'Active'
   ),
   (
     'Muscle Gain',
     'Increase muscle mass with beginner-friendly split training and recovery spacing.',
-    'All',
-    NULL,
     'Active'
   ),
   (
     'Strength Focus',
     'Build foundational strength through compound movement categories and controlled recovery.',
-    'All',
-    NULL,
     'Active'
   );
 
@@ -63,8 +47,6 @@ WITH updated_body_goals AS (
   UPDATE body_goals AS bg
   SET
     description = seed.description,
-    gender_display = seed.gender_display,
-    image_url = seed.image_url,
     status = seed.status
   FROM body_goal_seed_temp AS seed
   WHERE bg.label = seed.label
@@ -73,15 +55,11 @@ WITH updated_body_goals AS (
 INSERT INTO body_goals (
   label,
   description,
-  gender_display,
-  image_url,
   status
 )
 SELECT
   seed.label,
   seed.description,
-  seed.gender_display,
-  seed.image_url,
   seed.status
 FROM body_goal_seed_temp AS seed
 WHERE NOT EXISTS (

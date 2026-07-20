@@ -15,24 +15,23 @@ import {
 import { AdminConfirmDialog } from "@/components/admin/admin-confirm-dialog";
 import { AdminFilterBar } from "@/components/admin/admin-filter-bar";
 import { AdminFormModal } from "@/components/admin/admin-form-modal";
+import { ImageUpload } from "@/components/admin/image-upload";
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { AdminStatusBadge } from "@/components/admin/admin-status-badge";
 import { AdminDataTable } from "@/components/admin/admin-table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { uploadAdminImage } from "@/lib/admin-image-upload";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  genderDisplayOptions,
   type AdminBodyGoalItem,
-  type GenderDisplay,
 } from "@/types/admin-data";
 
 const headers = [
-  "Image",
+  "Images",
   "Goal Label",
-  "Gender",
   "Workout Template",
   "Nutrition Template",
   "Status",
@@ -43,8 +42,9 @@ const emptyDraft: AdminBodyGoalItem = {
   id: "",
   goalLabel: "",
   shortDescription: "",
-  genderDisplay: "All",
-  image: "",
+  maleImageUrl: "",
+  femaleImageUrl: "",
+  unisexImageUrl: "",
   workoutTemplateId: "",
   nutritionTemplateId: "",
   status: "Active",
@@ -60,15 +60,46 @@ interface TemplateOption {
   name: string;
 }
 
+interface OriginalImageUrls {
+  maleImageUrl: string;
+  femaleImageUrl: string;
+  unisexImageUrl: string;
+}
+
 export interface AdminBodyGoalsScreenProps {
   bodyGoals: BodyGoalItem[];
   workoutTemplates: TemplateOption[];
   nutritionTemplates: TemplateOption[];
   filters: {
     search: string;
-    genderDisplay: string;
     status: string;
   };
+}
+
+function BodyGoalImagePreview({
+  label,
+  imageUrl,
+}: {
+  label: string;
+  imageUrl: string;
+}) {
+  return (
+    <div className="space-y-2">
+      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-text-secondary)]">
+        {label}
+      </p>
+      <div className="flex h-20 w-16 items-center justify-center overflow-hidden rounded-2xl bg-[var(--color-muted-bg)]">
+        {imageUrl ? (
+          <div
+            className="h-full w-full bg-cover bg-center"
+            style={{ backgroundImage: `url(${imageUrl})` }}
+          />
+        ) : (
+          <ImageIcon className="size-5 text-[var(--color-primary)]" />
+        )}
+      </div>
+    </div>
+  );
 }
 
 export function AdminBodyGoalsScreen({
@@ -86,12 +117,36 @@ export function AdminBodyGoalsScreen({
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [isStatusPending, setIsStatusPending] = useState(false);
   const [isFormPending, setIsFormPending] = useState(false);
+  const [selectedMaleImageFile, setSelectedMaleImageFile] = useState<File | null>(null);
+  const [selectedFemaleImageFile, setSelectedFemaleImageFile] =
+    useState<File | null>(null);
+  const [selectedUnisexImageFile, setSelectedUnisexImageFile] =
+    useState<File | null>(null);
+  const [previewMaleImageUrl, setPreviewMaleImageUrl] = useState("");
+  const [previewFemaleImageUrl, setPreviewFemaleImageUrl] = useState("");
+  const [previewUnisexImageUrl, setPreviewUnisexImageUrl] = useState("");
+  const [originalImageUrls, setOriginalImageUrls] = useState<OriginalImageUrls>({
+    maleImageUrl: "",
+    femaleImageUrl: "",
+    unisexImageUrl: "",
+  });
   const [formState, setFormState] = useState<BodyGoalActionState>(
     initialBodyGoalActionState,
   );
 
   const openCreate = () => {
     setDraft(emptyDraft);
+    setSelectedMaleImageFile(null);
+    setSelectedFemaleImageFile(null);
+    setSelectedUnisexImageFile(null);
+    setPreviewMaleImageUrl("");
+    setPreviewFemaleImageUrl("");
+    setPreviewUnisexImageUrl("");
+    setOriginalImageUrls({
+      maleImageUrl: "",
+      femaleImageUrl: "",
+      unisexImageUrl: "",
+    });
     setFeedbackMessage("");
     setFormState(initialBodyGoalActionState);
     setFormOpen(true);
@@ -102,11 +157,23 @@ export function AdminBodyGoalsScreen({
       id: item.id,
       goalLabel: item.goalLabel,
       shortDescription: item.shortDescription,
-      genderDisplay: item.genderDisplay,
-      image: item.image,
+      maleImageUrl: item.maleImageUrl,
+      femaleImageUrl: item.femaleImageUrl,
+      unisexImageUrl: item.unisexImageUrl,
       workoutTemplateId: item.workoutTemplateId ?? "",
       nutritionTemplateId: item.nutritionTemplateId ?? "",
       status: item.status,
+    });
+    setSelectedMaleImageFile(null);
+    setSelectedFemaleImageFile(null);
+    setSelectedUnisexImageFile(null);
+    setPreviewMaleImageUrl(item.maleImageUrl);
+    setPreviewFemaleImageUrl(item.femaleImageUrl);
+    setPreviewUnisexImageUrl(item.unisexImageUrl);
+    setOriginalImageUrls({
+      maleImageUrl: item.maleImageUrl,
+      femaleImageUrl: item.femaleImageUrl,
+      unisexImageUrl: item.unisexImageUrl,
     });
     setFeedbackMessage("");
     setFormState(initialBodyGoalActionState);
@@ -134,11 +201,56 @@ export function AdminBodyGoalsScreen({
     });
   };
 
-  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
     setIsFormPending(true);
+
+    try {
+      if (selectedMaleImageFile) {
+        const uploadedImageUrl = await uploadAdminImage({
+          file: selectedMaleImageFile,
+          type: "body-goals",
+          existingImagePath: draft.maleImageUrl || null,
+        });
+
+        formData.set("maleImageUrl", uploadedImageUrl);
+      }
+
+      if (selectedFemaleImageFile) {
+        const uploadedImageUrl = await uploadAdminImage({
+          file: selectedFemaleImageFile,
+          type: "body-goals",
+          existingImagePath: draft.femaleImageUrl || null,
+        });
+
+        formData.set("femaleImageUrl", uploadedImageUrl);
+      }
+
+      if (selectedUnisexImageFile) {
+        const uploadedImageUrl = await uploadAdminImage({
+          file: selectedUnisexImageFile,
+          type: "body-goals",
+          existingImagePath: draft.unisexImageUrl || null,
+        });
+
+        formData.set("unisexImageUrl", uploadedImageUrl);
+      }
+    } catch (error) {
+      setIsFormPending(false);
+      setFormState({
+        success: false,
+        message: "",
+        errors: {
+          form:
+            error instanceof Error
+              ? error.message
+              : "Unable to upload image right now.",
+        },
+      });
+      return;
+    }
 
     startTransition(async () => {
       const result = await saveBodyGoalAction(
@@ -151,6 +263,17 @@ export function AdminBodyGoalsScreen({
       if (result.success) {
         setFormOpen(false);
         setDraft(emptyDraft);
+        setSelectedMaleImageFile(null);
+        setSelectedFemaleImageFile(null);
+        setSelectedUnisexImageFile(null);
+        setPreviewMaleImageUrl("");
+        setPreviewFemaleImageUrl("");
+        setPreviewUnisexImageUrl("");
+        setOriginalImageUrls({
+          maleImageUrl: "",
+          femaleImageUrl: "",
+          unisexImageUrl: "",
+        });
         setFeedbackMessage(result.message);
         formRef.current?.reset();
       }
@@ -184,7 +307,7 @@ export function AdminBodyGoalsScreen({
         }
       />
       <AdminFilterBar>
-        <form action={pathname} method="get" className="grid flex-1 gap-3 lg:grid-cols-3">
+        <form action={pathname} method="get" className="grid flex-1 gap-3 lg:grid-cols-2">
           <div className="relative">
             <Search className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-[var(--color-text-secondary)]" />
             <Input
@@ -195,14 +318,6 @@ export function AdminBodyGoalsScreen({
             />
           </div>
           <Select
-            name="genderDisplay"
-            defaultValue={filters.genderDisplay}
-            options={[
-              { label: "All Gender Display", value: "All" },
-              ...genderDisplayOptions.map((item) => ({ label: item, value: item })),
-            ]}
-          />
-          <Select
             name="status"
             defaultValue={filters.status}
             options={[
@@ -210,8 +325,8 @@ export function AdminBodyGoalsScreen({
               { label: "Active", value: "Active" },
               { label: "Inactive", value: "Inactive" },
             ]}
-          />
-          <div className="lg:col-span-3 flex flex-wrap justify-end gap-3">
+            />
+          <div className="flex flex-wrap justify-end gap-3 lg:col-span-2">
             <Button type="submit" variant="secondary">
               Apply Filters
             </Button>
@@ -235,8 +350,10 @@ export function AdminBodyGoalsScreen({
           {bodyGoals.map((item) => (
             <tr key={item.id}>
               <td className="px-5 py-4">
-                <div className="flex size-14 items-center justify-center rounded-2xl bg-[var(--color-muted-bg)]">
-                  <ImageIcon className="size-5 text-[var(--color-primary)]" />
+                <div className="flex gap-2">
+                  <BodyGoalImagePreview label="M" imageUrl={item.maleImageUrl} />
+                  <BodyGoalImagePreview label="F" imageUrl={item.femaleImageUrl} />
+                  <BodyGoalImagePreview label="U" imageUrl={item.unisexImageUrl} />
                 </div>
               </td>
               <td className="px-5 py-4">
@@ -246,9 +363,6 @@ export function AdminBodyGoalsScreen({
                     {item.shortDescription}
                   </p>
                 </div>
-              </td>
-              <td className="px-5 py-4 text-sm text-[var(--color-text-secondary)]">
-                {item.genderDisplay}
               </td>
               <td className="px-5 py-4 text-sm text-[var(--color-text-secondary)]">
                 {item.workoutTemplateName || "-"}
@@ -296,6 +410,24 @@ export function AdminBodyGoalsScreen({
       >
         <form ref={formRef} className="space-y-5" onSubmit={handleFormSubmit}>
           <input type="hidden" name="id" value={draft.id} />
+          <input type="hidden" name="maleImageUrl" value={draft.maleImageUrl} />
+          <input type="hidden" name="femaleImageUrl" value={draft.femaleImageUrl} />
+          <input type="hidden" name="unisexImageUrl" value={draft.unisexImageUrl} />
+          <input
+            type="hidden"
+            name="previousMaleImageUrl"
+            value={originalImageUrls.maleImageUrl}
+          />
+          <input
+            type="hidden"
+            name="previousFemaleImageUrl"
+            value={originalImageUrls.femaleImageUrl}
+          />
+          <input
+            type="hidden"
+            name="previousUnisexImageUrl"
+            value={originalImageUrls.unisexImageUrl}
+          />
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <label className="text-sm font-medium text-[var(--color-text)]">
@@ -311,31 +443,6 @@ export function AdminBodyGoalsScreen({
               />
               {formErrors.goalLabel ? (
                 <p className="text-sm text-[var(--color-error)]">{formErrors.goalLabel}</p>
-              ) : null}
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]">
-                Gender Display
-              </label>
-              <Select
-                name="genderDisplay"
-                value={draft.genderDisplay}
-                onChange={(event) =>
-                  setDraft((current) => ({
-                    ...current,
-                    genderDisplay: event.target.value as GenderDisplay,
-                  }))
-                }
-                options={genderDisplayOptions.map((item) => ({
-                  label: item,
-                  value: item,
-                }))}
-                aria-invalid={formErrors.genderDisplay ? true : undefined}
-              />
-              {formErrors.genderDisplay ? (
-                <p className="text-sm text-[var(--color-error)]">
-                  {formErrors.genderDisplay}
-                </p>
               ) : null}
             </div>
             <div className="space-y-2 md:col-span-2">
@@ -362,16 +469,63 @@ export function AdminBodyGoalsScreen({
             </div>
             <div className="space-y-2 md:col-span-2">
               <label className="text-sm font-medium text-[var(--color-text)]">
-                Image URL or mock image path
+                Image Management
               </label>
-              <Input
-                name="imageUrl"
-                value={draft.image}
-                onChange={(event) =>
-                  setDraft((current) => ({ ...current, image: event.target.value }))
-                }
-                placeholder="Leave empty to use placeholder"
-              />
+              <div className="grid gap-4">
+                <ImageUpload
+                  type="body-goals"
+                  value={draft.maleImageUrl}
+                  selectedFile={selectedMaleImageFile}
+                  onFileChange={setSelectedMaleImageFile}
+                  onRemoveCurrent={() =>
+                    setDraft((current) => ({ ...current, maleImageUrl: "" }))
+                  }
+                  onPreviewUrlChange={setPreviewMaleImageUrl}
+                  error={formErrors.maleImageUrl}
+                  helperText="Male image shown to male users when available."
+                />
+                <ImageUpload
+                  type="body-goals"
+                  value={draft.femaleImageUrl}
+                  selectedFile={selectedFemaleImageFile}
+                  onFileChange={setSelectedFemaleImageFile}
+                  onRemoveCurrent={() =>
+                    setDraft((current) => ({ ...current, femaleImageUrl: "" }))
+                  }
+                  onPreviewUrlChange={setPreviewFemaleImageUrl}
+                  error={formErrors.femaleImageUrl}
+                  helperText="Female image shown to female users when available."
+                />
+                <ImageUpload
+                  type="body-goals"
+                  value={draft.unisexImageUrl}
+                  selectedFile={selectedUnisexImageFile}
+                  onFileChange={setSelectedUnisexImageFile}
+                  onRemoveCurrent={() =>
+                    setDraft((current) => ({ ...current, unisexImageUrl: "" }))
+                  }
+                  onPreviewUrlChange={setPreviewUnisexImageUrl}
+                  error={formErrors.unisexImageUrl}
+                  helperText="Optional fallback image when no gender-specific image exists."
+                />
+              </div>
+            </div>
+            <div className="rounded-[1.5rem] border border-dashed border-[var(--color-border)] p-4 md:col-span-2">
+              <p className="text-sm font-medium text-[var(--color-text)]">Image Preview</p>
+              <div className="mt-3 grid gap-4 sm:grid-cols-3">
+                <BodyGoalImagePreview
+                  label="Male"
+                  imageUrl={previewMaleImageUrl || draft.maleImageUrl}
+                />
+                <BodyGoalImagePreview
+                  label="Female"
+                  imageUrl={previewFemaleImageUrl || draft.femaleImageUrl}
+                />
+                <BodyGoalImagePreview
+                  label="Unisex"
+                  imageUrl={previewUnisexImageUrl || draft.unisexImageUrl}
+                />
+              </div>
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium text-[var(--color-text)]">
@@ -449,21 +603,53 @@ export function AdminBodyGoalsScreen({
           </div>
           <div className="rounded-[1.5rem] border border-dashed border-[var(--color-border)] p-4">
             <p className="text-sm font-medium text-[var(--color-text)]">Card Preview</p>
-            <div className="mt-3 max-w-xs rounded-[1.5rem] border border-[var(--color-border)] bg-white p-3">
-              <div className="flex aspect-[4/5] items-center justify-center rounded-[1rem] bg-[var(--color-muted-bg)]">
-                <div className="text-center">
-                  <ImageIcon className="mx-auto size-8 text-[var(--color-primary)]" />
-                  <p className="mt-2 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-text-secondary)]">
-                    {draft.image || "Image placeholder"}
+            <div className="mt-3 grid gap-4 lg:grid-cols-3">
+              {[
+                {
+                  label: "Male Preview",
+                  imageUrl: previewMaleImageUrl || draft.maleImageUrl,
+                },
+                {
+                  label: "Female Preview",
+                  imageUrl: previewFemaleImageUrl || draft.femaleImageUrl,
+                },
+                {
+                  label: "Unisex Preview",
+                  imageUrl: previewUnisexImageUrl || draft.unisexImageUrl,
+                },
+              ].map((preview) => (
+                <div
+                  key={preview.label}
+                  className="rounded-[1.5rem] border border-[var(--color-border)] bg-white p-3"
+                >
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-text-secondary)]">
+                    {preview.label}
+                  </p>
+                  <div className="mt-3 flex aspect-[4/5] items-center justify-center rounded-[1rem] bg-[var(--color-muted-bg)]">
+                    {preview.imageUrl ? (
+                      <div
+                        className="h-full w-full rounded-[1rem] bg-cover bg-center"
+                        style={{
+                          backgroundImage: `url(${preview.imageUrl})`,
+                        }}
+                      />
+                    ) : (
+                      <div className="text-center">
+                        <ImageIcon className="mx-auto size-8 text-[var(--color-primary)]" />
+                        <p className="mt-2 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-text-secondary)]">
+                          Image placeholder
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                  <p className="mt-3 text-sm font-semibold text-[var(--color-text)]">
+                    {draft.goalLabel || "Goal Label"}
+                  </p>
+                  <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
+                    {draft.shortDescription || "Short description preview"}
                   </p>
                 </div>
-              </div>
-              <p className="mt-3 text-sm font-semibold text-[var(--color-text)]">
-                {draft.goalLabel || "Goal Label"}
-              </p>
-              <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
-                {draft.shortDescription || "Short description preview"}
-              </p>
+              ))}
             </div>
           </div>
           {formErrors.form ? (

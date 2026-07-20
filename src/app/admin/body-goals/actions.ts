@@ -5,6 +5,10 @@ import { revalidatePath } from "next/cache";
 import type { BodyGoalActionState } from "@/app/admin/body-goals/action-state";
 import { requireAdminUser } from "@/lib/server/auth";
 import {
+  deleteManagedImageIfPresent,
+  isManagedAdminImagePath,
+} from "@/lib/server/admin-image-storage";
+import {
   findActiveNutritionTemplateById,
   findActiveWorkoutTemplateById,
   findBodyGoalLabelDuplicate,
@@ -12,15 +16,9 @@ import {
   updateBodyGoalStatus,
 } from "@/lib/server/repositories/body-goal-repository";
 import {
-  genderDisplayOptions,
   statusOptions,
   type AdminRecordStatus,
-  type GenderDisplay,
 } from "@/types/admin-data";
-
-function isValidGenderDisplay(value: string): value is GenderDisplay {
-  return genderDisplayOptions.includes(value as GenderDisplay);
-}
 
 function isValidStatus(value: string): value is AdminRecordStatus {
   return statusOptions.includes(value as AdminRecordStatus);
@@ -54,8 +52,16 @@ export async function saveBodyGoalAction(
   const idValue = parseOptionalNumber(formData.get("id"));
   const label = String(formData.get("label") ?? "").trim();
   const description = String(formData.get("description") ?? "").trim();
-  const genderDisplayValue = String(formData.get("genderDisplay") ?? "");
-  const imageUrl = String(formData.get("imageUrl") ?? "").trim();
+  const maleImageUrl = String(formData.get("maleImageUrl") ?? "").trim();
+  const femaleImageUrl = String(formData.get("femaleImageUrl") ?? "").trim();
+  const unisexImageUrl = String(formData.get("unisexImageUrl") ?? "").trim();
+  const previousMaleImageUrl = String(formData.get("previousMaleImageUrl") ?? "").trim();
+  const previousFemaleImageUrl = String(
+    formData.get("previousFemaleImageUrl") ?? "",
+  ).trim();
+  const previousUnisexImageUrl = String(
+    formData.get("previousUnisexImageUrl") ?? "",
+  ).trim();
   const workoutTemplateIdValue = parseOptionalNumber(formData.get("workoutTemplateId"));
   const nutritionTemplateIdValue = parseOptionalNumber(
     formData.get("nutritionTemplateId"),
@@ -76,10 +82,6 @@ export async function saveBodyGoalAction(
     errors.shortDescription = "Short description is required.";
   }
 
-  if (!isValidGenderDisplay(genderDisplayValue)) {
-    errors.genderDisplay = "Select a valid gender display.";
-  }
-
   if (
     workoutTemplateIdValue !== undefined &&
     (!Number.isInteger(workoutTemplateIdValue) || workoutTemplateIdValue <= 0)
@@ -96,6 +98,16 @@ export async function saveBodyGoalAction(
 
   if (!isValidStatus(statusValue)) {
     errors.status = "Select a valid status.";
+  }
+
+  for (const [fieldName, value] of [
+    ["maleImageUrl", maleImageUrl],
+    ["femaleImageUrl", femaleImageUrl],
+    ["unisexImageUrl", unisexImageUrl],
+  ] as const) {
+    if (value && !isManagedAdminImagePath(value, "body-goals")) {
+      errors[fieldName] = "Upload a valid body goal image.";
+    }
   }
 
   if (!errors.goalLabel) {
@@ -137,7 +149,6 @@ export async function saveBodyGoalAction(
     };
   }
 
-  const genderDisplay = genderDisplayValue as GenderDisplay;
   const status = statusValue as AdminRecordStatus;
 
   try {
@@ -145,8 +156,9 @@ export async function saveBodyGoalAction(
       id: idValue !== undefined ? idValue : undefined,
       label,
       description,
-      genderDisplay,
-      imageUrl: imageUrl || null,
+      maleImageUrl: maleImageUrl || null,
+      femaleImageUrl: femaleImageUrl || null,
+      unisexImageUrl: unisexImageUrl || null,
       workoutTemplateId: workoutTemplateIdValue ?? null,
       nutritionTemplateId: nutritionTemplateIdValue ?? null,
       status,
@@ -160,6 +172,19 @@ export async function saveBodyGoalAction(
           form: "The body goal record could not be found.",
         },
       };
+    }
+
+    for (const [nextImageUrl, previousImageUrl] of [
+      [maleImageUrl, previousMaleImageUrl],
+      [femaleImageUrl, previousFemaleImageUrl],
+      [unisexImageUrl, previousUnisexImageUrl],
+    ]) {
+      if (
+        previousImageUrl &&
+        (!nextImageUrl || nextImageUrl !== previousImageUrl)
+      ) {
+        await deleteManagedImageIfPresent(previousImageUrl, "body-goals");
+      }
     }
   } catch {
     return {

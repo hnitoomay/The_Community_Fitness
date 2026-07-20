@@ -22,15 +22,19 @@ export function BodyGoalCard({ goal, selected, onSelect }: BodyGoalCardProps) {
     >
       <div className="relative overflow-hidden rounded-[1.15rem] bg-[var(--color-muted-bg)]">
         <div className="flex aspect-[4/5] items-center justify-center">
-          <div className="text-center">
-            <ImageIcon className="mx-auto size-8 text-[var(--color-primary)]" />
-            <p className="mt-3 px-4 text-xs font-medium uppercase tracking-[0.18em] text-[var(--color-text-secondary)]">
-              {goal.imagePlaceholder}
-            </p>
-          </div>
-        </div>
-        <div className="absolute left-3 top-3 rounded-full bg-white/95 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--color-primary)]">
-          {goal.genderGroup === "all" ? "All" : goal.genderGroup}
+          {goal.imageUrl ? (
+            <div
+              className="h-full w-full bg-cover bg-center"
+              style={{ backgroundImage: `url(${goal.imageUrl})` }}
+            />
+          ) : (
+            <div className="text-center">
+              <ImageIcon className="mx-auto size-8 text-[var(--color-primary)]" />
+              <p className="mt-3 px-4 text-xs font-medium uppercase tracking-[0.18em] text-[var(--color-text-secondary)]">
+                {goal.imagePlaceholder}
+              </p>
+            </div>
+          )}
         </div>
         {selected ? (
           <div className="absolute right-3 top-3 rounded-full bg-white p-1 text-[var(--color-primary)]">

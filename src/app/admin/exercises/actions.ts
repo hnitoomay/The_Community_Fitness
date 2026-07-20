@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 
 import type { ExerciseActionState } from "@/app/admin/exercises/action-state";
 import { requireAdminUser } from "@/lib/server/auth";
+import { isManagedAdminImagePath } from "@/lib/server/admin-image-storage";
 import {
   saveExerciseWithEquipment,
   updateExerciseStatus,
@@ -56,6 +57,7 @@ export async function saveExerciseAction(
 
   const idValue = parseOptionalNumber(formData.get("id"));
   const name = String(formData.get("name") ?? "").trim();
+  const imageUrl = String(formData.get("imageUrl") ?? "").trim();
   const categoryValue = String(formData.get("category") ?? "");
   const difficultyValue = String(formData.get("difficulty") ?? "");
   const defaultSetsValue = parseOptionalNumber(formData.get("defaultSets"));
@@ -109,6 +111,10 @@ export async function saveExerciseAction(
     errors.status = "Select a valid status.";
   }
 
+  if (imageUrl && !isManagedAdminImagePath(imageUrl, "exercises")) {
+    errors.imageUrl = "Upload a valid exercise image.";
+  }
+
   if (Object.keys(errors).length > 0) {
     return {
       success: false,
@@ -125,6 +131,7 @@ export async function saveExerciseAction(
     const saved = await saveExerciseWithEquipment({
       id: idValue !== undefined ? idValue : undefined,
       name,
+      imageUrl: imageUrl || null,
       category,
       difficulty,
       defaultSets: defaultSetsValue ?? null,

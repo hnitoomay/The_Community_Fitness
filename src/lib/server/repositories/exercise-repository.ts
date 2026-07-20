@@ -30,6 +30,7 @@ export interface ExerciseListItem extends AdminExerciseItem {
 export interface ExerciseWriteInput {
   id?: number;
   name: string;
+  imageUrl?: string | null;
   category: ExerciseCategory;
   difficulty: ExerciseDifficulty;
   defaultSets?: number | null;
@@ -42,6 +43,7 @@ export interface ExerciseWriteInput {
 interface ExerciseListRow {
   id: number;
   name: string;
+  image_url: string | null;
   category: ExerciseCategory;
   difficulty: ExerciseDifficulty;
   default_sets: number | null;
@@ -74,6 +76,7 @@ function mapExerciseListRow(row: ExerciseListRow): ExerciseListItem {
   return {
     id: String(row.id),
     exerciseName: row.name,
+    imageUrl: row.image_url ?? "",
     category: row.category,
     difficulty: row.difficulty,
     requiredEquipmentIds: equipmentIds.map(String),
@@ -132,6 +135,7 @@ export async function listExercises(
       SELECT
         e.id,
         e.name,
+        e.image_url,
         e.category,
         e.difficulty,
         e.default_sets,
@@ -155,6 +159,7 @@ export async function listExercises(
       GROUP BY
         e.id,
         e.name,
+        e.image_url,
         e.category,
         e.difficulty,
         e.default_sets,
@@ -258,17 +263,19 @@ export async function saveExerciseWithEquipment(input: ExerciseWriteInput) {
           UPDATE exercises
           SET
             name = $1,
-            category = $2,
-            difficulty = $3,
-            default_sets = $4,
-            default_reps_or_duration = $5,
-            instructions = $6,
-            status = $7
-          WHERE id = $8
+            image_url = $2,
+            category = $3,
+            difficulty = $4,
+            default_sets = $5,
+            default_reps_or_duration = $6,
+            instructions = $7,
+            status = $8
+          WHERE id = $9
           RETURNING id
         `,
         [
           input.name,
+          input.imageUrl ?? null,
           input.category,
           input.difficulty,
           input.defaultSets ?? null,
@@ -287,6 +294,7 @@ export async function saveExerciseWithEquipment(input: ExerciseWriteInput) {
         `
           INSERT INTO exercises (
             name,
+            image_url,
             category,
             difficulty,
             default_sets,
@@ -294,11 +302,12 @@ export async function saveExerciseWithEquipment(input: ExerciseWriteInput) {
             instructions,
             status
           )
-          VALUES ($1, $2, $3, $4, $5, $6, $7)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
           RETURNING id
         `,
         [
           input.name,
+          input.imageUrl ?? null,
           input.category,
           input.difficulty,
           input.defaultSets ?? null,

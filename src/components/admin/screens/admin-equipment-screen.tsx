@@ -6,7 +6,7 @@ import {
   useState,
 } from "react";
 import { usePathname } from "next/navigation";
-import { PencilLine, Plus, Search, Slash } from "lucide-react";
+import { ImageIcon, PencilLine, Plus, Search, Slash } from "lucide-react";
 
 import {
   saveEquipmentAction,
@@ -19,11 +19,13 @@ import {
 import { AdminConfirmDialog } from "@/components/admin/admin-confirm-dialog";
 import { AdminFilterBar } from "@/components/admin/admin-filter-bar";
 import { AdminFormModal } from "@/components/admin/admin-form-modal";
+import { ImageUpload } from "@/components/admin/image-upload";
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { AdminPagination } from "@/components/admin/admin-pagination";
 import { AdminStatusBadge } from "@/components/admin/admin-status-badge";
 import { AdminDataTable } from "@/components/admin/admin-table";
+import { uploadAdminImage } from "@/lib/admin-image-upload";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
@@ -39,6 +41,7 @@ import {
 } from "@/types/admin-data";
 
 const headers = [
+  "Image",
   "Source No.",
   "Equipment Name",
   "Category",
@@ -55,6 +58,7 @@ const emptyDraft: AdminEquipmentItem = {
   id: "",
   sourceNo: undefined,
   equipmentName: "",
+  imageUrl: "",
   category: "Cardio Machine",
   quantity: 0,
   unit: "Unit",
@@ -90,6 +94,8 @@ export function AdminEquipmentScreen({
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [isAvailabilityPending, setIsAvailabilityPending] = useState(false);
   const [isFormPending, setIsFormPending] = useState(false);
+  const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
+  const [previewImageUrl, setPreviewImageUrl] = useState("");
   const [formState, setFormState] = useState<EquipmentActionState>(
     initialEquipmentActionState,
   );
@@ -103,6 +109,8 @@ export function AdminEquipmentScreen({
 
   const openCreate = () => {
     setDraft(emptyDraft);
+    setSelectedImageFile(null);
+    setPreviewImageUrl("");
     setFeedbackMessage("");
     setFormState(initialEquipmentActionState);
     setFormOpen(true);
@@ -110,6 +118,8 @@ export function AdminEquipmentScreen({
 
   const openEdit = (item: AdminEquipmentItem) => {
     setDraft(item);
+    setSelectedImageFile(null);
+    setPreviewImageUrl(item.imageUrl);
     setFeedbackMessage("");
     setFormState(initialEquipmentActionState);
     setFormOpen(true);
@@ -147,11 +157,36 @@ export function AdminEquipmentScreen({
   const formErrors = formState.errors;
   const savingLabel = draft.id ? "Edit Equipment" : "Add Equipment";
 
-  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
     setIsFormPending(true);
+
+    try {
+      if (selectedImageFile) {
+        const uploadedImageUrl = await uploadAdminImage({
+          file: selectedImageFile,
+          type: "equipment",
+          existingImagePath: draft.imageUrl || null,
+        });
+
+        formData.set("imageUrl", uploadedImageUrl);
+      }
+    } catch (error) {
+      setIsFormPending(false);
+      setFormState({
+        success: false,
+        message: "",
+        errors: {
+          imageUrl:
+            error instanceof Error
+              ? error.message
+              : "Unable to upload image right now.",
+        },
+      });
+      return;
+    }
 
     startTransition(async () => {
       const result = await saveEquipmentAction(initialEquipmentActionState, formData);
@@ -161,6 +196,8 @@ export function AdminEquipmentScreen({
       if (result.success) {
         setFormOpen(false);
         setDraft(emptyDraft);
+        setSelectedImageFile(null);
+        setPreviewImageUrl("");
         setFeedbackMessage(result.message);
         formRef.current?.reset();
       }
@@ -254,6 +291,18 @@ export function AdminEquipmentScreen({
         >
           {pagedRows.map((item) => (
             <tr key={item.id}>
+              <td className="px-5 py-4">
+                <div className="flex size-14 items-center justify-center rounded-2xl bg-[var(--color-muted-bg)]">
+                  {item.imageUrl ? (
+                    <div
+                      className="h-full w-full rounded-2xl bg-cover bg-center"
+                      style={{ backgroundImage: `url(${item.imageUrl})` }}
+                    />
+                  ) : (
+                    <ImageIcon className="size-5 text-[var(--color-primary)]" />
+                  )}
+                </div>
+              </td>
               <td className="px-5 py-4 text-sm text-[var(--color-text-secondary)]">
                 {item.sourceNo ?? "-"}
               </td>
@@ -321,6 +370,7 @@ export function AdminEquipmentScreen({
       >
         <form ref={formRef} className="space-y-4" onSubmit={handleFormSubmit}>
           <input type="hidden" name="id" value={draft.id} />
+          <input type="hidden" name="imageUrl" value={draft.imageUrl} />
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <label className="text-sm font-medium text-[var(--color-text)]">
@@ -367,6 +417,20 @@ export function AdminEquipmentScreen({
                   {formErrors.equipmentName}
                 </p>
               ) : null}
+            </div>
+            <div className="space-y-2 md:col-span-2">
+              <label className="text-sm font-medium text-[var(--color-text)]">
+                Equipment Image
+              </label>
+              <ImageUpload
+                type="equipment"
+                value={draft.imageUrl}
+                selectedFile={selectedImageFile}
+                onFileChange={setSelectedImageFile}
+                onPreviewUrlChange={setPreviewImageUrl}
+                error={formErrors.imageUrl}
+                helperText="Upload an equipment image from your computer."
+              />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium text-[var(--color-text)]">
@@ -498,6 +562,29 @@ export function AdminEquipmentScreen({
                 }
                 className="min-h-24"
               />
+            </div>
+          </div>
+          <div className="rounded-[1.5rem] border border-dashed border-[var(--color-border)] p-4">
+            <p className="text-sm font-medium text-[var(--color-text)]">Image Preview</p>
+            <div className="mt-3 max-w-xs rounded-[1.5rem] border border-[var(--color-border)] bg-white p-3">
+              <div className="flex aspect-[4/5] items-center justify-center rounded-[1rem] bg-[var(--color-muted-bg)]">
+                {previewImageUrl || draft.imageUrl ? (
+                  <div
+                    className="h-full w-full rounded-[1rem] bg-cover bg-center"
+                    style={{
+                      backgroundImage: `url(${previewImageUrl || draft.imageUrl})`,
+                    }}
+                  />
+                ) : (
+                  <ImageIcon className="size-8 text-[var(--color-primary)]" />
+                )}
+              </div>
+              <p className="mt-3 text-sm font-semibold text-[var(--color-text)]">
+                {draft.equipmentName || "Equipment name"}
+              </p>
+              <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
+                {draft.notes || "Equipment notes preview"}
+              </p>
             </div>
           </div>
           {formErrors.form ? (

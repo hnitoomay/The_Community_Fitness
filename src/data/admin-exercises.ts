@@ -4,6 +4,7 @@ export const initialAdminExercises: AdminExerciseItem[] = [
   {
     id: "ex-1",
     exerciseName: "Machine Leg Press",
+    imageUrl: "",
     category: "Legs",
     difficulty: "Beginner",
     requiredEquipmentIds: [],
@@ -15,6 +16,7 @@ export const initialAdminExercises: AdminExerciseItem[] = [
   {
     id: "ex-2",
     exerciseName: "Smith Machine Squat",
+    imageUrl: "",
     category: "Legs",
     difficulty: "Intermediate",
     requiredEquipmentIds: ["eq-3"],
@@ -26,6 +28,7 @@ export const initialAdminExercises: AdminExerciseItem[] = [
   {
     id: "ex-3",
     exerciseName: "Dumbbell Shoulder Press",
+    imageUrl: "",
     category: "Shoulders",
     difficulty: "Intermediate",
     requiredEquipmentIds: ["eq-7"],
@@ -37,6 +40,7 @@ export const initialAdminExercises: AdminExerciseItem[] = [
   {
     id: "ex-4",
     exerciseName: "Treadmill Walking",
+    imageUrl: "",
     category: "Cardio",
     difficulty: "Beginner",
     requiredEquipmentIds: ["eq-1"],
@@ -47,6 +51,7 @@ export const initialAdminExercises: AdminExerciseItem[] = [
   {
     id: "ex-5",
     exerciseName: "Resistance Loop Lateral Walk",
+    imageUrl: "",
     category: "Full Body",
     difficulty: "Beginner",
     requiredEquipmentIds: [],
@@ -58,6 +63,7 @@ export const initialAdminExercises: AdminExerciseItem[] = [
   {
     id: "ex-6",
     exerciseName: "Bodyweight Dead Bug",
+    imageUrl: "",
     category: "Core",
     difficulty: "Beginner",
     requiredEquipmentIds: [],

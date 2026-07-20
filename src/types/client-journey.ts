@@ -2,8 +2,6 @@ export type GenderValue = "" | "male" | "female" | "other";
 export type HomePreviewMode = "incomplete" | "active";
 export type YesNoChoice = "yes" | "no";
 export type YesNoneChoice = "yes" | "none";
-export type BodyGoalGenderGroup = "all" | "male" | "female";
-
 export interface BodyMeasurementsDraft {
   heightCm: string;
   weightKg: string;
@@ -60,7 +58,7 @@ export interface BodyGoalRecord {
   id: string;
   label: string;
   description: string;
-  genderGroup: BodyGoalGenderGroup;
+  imageUrl: string | null;
   imagePlaceholder: string;
 }
 

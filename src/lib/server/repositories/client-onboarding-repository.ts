@@ -63,7 +63,7 @@ interface ClientBodyGoalRow {
   id: number;
   label: string;
   description: string;
-  gender_display: "Male" | "Female" | "All";
+  image_url: string | null;
 }
 
 interface ExistingProfileRow {
@@ -139,23 +139,12 @@ function joinArray(values: string[] | null | undefined) {
   return values && values.length > 0 ? values.join(", ") : "";
 }
 
-function mapBodyGoalGenderGroup(genderDisplay: ClientBodyGoalRow["gender_display"]) {
-  switch (genderDisplay) {
-    case "Male":
-      return "male";
-    case "Female":
-      return "female";
-    default:
-      return "all";
-  }
-}
-
 function mapBodyGoalRow(row: ClientBodyGoalRow): BodyGoalRecord {
   return {
     id: String(row.id),
     label: row.label,
     description: row.description,
-    genderGroup: mapBodyGoalGenderGroup(row.gender_display),
+    imageUrl: row.image_url,
     imagePlaceholder: row.label,
   };
 }
@@ -578,14 +567,27 @@ export async function getClientProfilePageData(
   return mapProfilePageRow(result.rows[0]);
 }
 
-export async function listActiveClientBodyGoals() {
+export async function listActiveClientBodyGoals(gender: GenderValue) {
+  const preferredGender =
+    gender === "male" || gender === "female" ? gender : "unisex";
   const result = await query<ClientBodyGoalRow>(
     `
-      SELECT id, label, description, gender_display
-      FROM body_goals
-      WHERE status = 'Active'
-      ORDER BY label ASC, id ASC
+      SELECT
+        bg.id,
+        bg.label,
+        bg.description,
+        COALESCE(
+          MAX(bgi.image_url) FILTER (WHERE bgi.gender = $1),
+          MAX(bgi.image_url) FILTER (WHERE bgi.gender = 'unisex')
+        ) AS image_url
+      FROM body_goals AS bg
+      LEFT JOIN body_goal_images AS bgi
+        ON bgi.body_goal_id = bg.id
+      WHERE bg.status = 'Active'
+      GROUP BY bg.id, bg.label, bg.description
+      ORDER BY bg.label ASC, bg.id ASC
     `,
+    [preferredGender],
   );
 
   return result.rows.map(mapBodyGoalRow);

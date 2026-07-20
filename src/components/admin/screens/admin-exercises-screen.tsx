@@ -6,7 +6,7 @@ import {
   useState,
 } from "react";
 import { usePathname } from "next/navigation";
-import { PencilLine, Plus, Search, Slash } from "lucide-react";
+import { ImageIcon, PencilLine, Plus, Search, Slash } from "lucide-react";
 
 import {
   saveExerciseAction,
@@ -19,11 +19,13 @@ import {
 import { AdminConfirmDialog } from "@/components/admin/admin-confirm-dialog";
 import { AdminFilterBar } from "@/components/admin/admin-filter-bar";
 import { AdminFormModal } from "@/components/admin/admin-form-modal";
+import { ImageUpload } from "@/components/admin/image-upload";
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { AdminPagination } from "@/components/admin/admin-pagination";
 import { AdminStatusBadge } from "@/components/admin/admin-status-badge";
 import { AdminDataTable } from "@/components/admin/admin-table";
+import { uploadAdminImage } from "@/lib/admin-image-upload";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -37,6 +39,7 @@ import {
 } from "@/types/admin-data";
 
 const headers = [
+  "Image",
   "Exercise Name",
   "Category",
   "Difficulty",
@@ -50,6 +53,7 @@ const pageSize = 6;
 const emptyDraft: AdminExerciseItem = {
   id: "",
   exerciseName: "",
+  imageUrl: "",
   category: "Chest",
   difficulty: "Beginner",
   requiredEquipmentIds: [],
@@ -95,6 +99,8 @@ export function AdminExercisesScreen({
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [isStatusPending, setIsStatusPending] = useState(false);
   const [isFormPending, setIsFormPending] = useState(false);
+  const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
+  const [previewImageUrl, setPreviewImageUrl] = useState("");
   const [formState, setFormState] = useState<ExerciseActionState>(
     initialExerciseActionState,
   );
@@ -108,6 +114,8 @@ export function AdminExercisesScreen({
 
   const openCreate = () => {
     setDraft(emptyDraft);
+    setSelectedImageFile(null);
+    setPreviewImageUrl("");
     setFeedbackMessage("");
     setFormState(initialExerciseActionState);
     setFormOpen(true);
@@ -117,6 +125,7 @@ export function AdminExercisesScreen({
     setDraft({
       id: item.id,
       exerciseName: item.exerciseName,
+      imageUrl: item.imageUrl,
       category: item.category,
       difficulty: item.difficulty,
       requiredEquipmentIds: item.requiredEquipmentIds,
@@ -125,6 +134,8 @@ export function AdminExercisesScreen({
       shortInstructions: item.shortInstructions,
       status: item.status,
     });
+    setSelectedImageFile(null);
+    setPreviewImageUrl(item.imageUrl);
     setFeedbackMessage("");
     setFormState(initialExerciseActionState);
     setFormOpen(true);
@@ -163,11 +174,36 @@ export function AdminExercisesScreen({
 
   const formErrors = formState.errors;
 
-  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
     setIsFormPending(true);
+
+    try {
+      if (selectedImageFile) {
+        const uploadedImageUrl = await uploadAdminImage({
+          file: selectedImageFile,
+          type: "exercises",
+          existingImagePath: draft.imageUrl || null,
+        });
+
+        formData.set("imageUrl", uploadedImageUrl);
+      }
+    } catch (error) {
+      setIsFormPending(false);
+      setFormState({
+        success: false,
+        message: "",
+        errors: {
+          imageUrl:
+            error instanceof Error
+              ? error.message
+              : "Unable to upload image right now.",
+        },
+      });
+      return;
+    }
 
     startTransition(async () => {
       const result = await saveExerciseAction(initialExerciseActionState, formData);
@@ -177,6 +213,8 @@ export function AdminExercisesScreen({
       if (result.success) {
         setFormOpen(false);
         setDraft(emptyDraft);
+        setSelectedImageFile(null);
+        setPreviewImageUrl("");
         setFeedbackMessage(result.message);
         formRef.current?.reset();
       }
@@ -271,6 +309,18 @@ export function AdminExercisesScreen({
           {pagedRows.map((item) => (
             <tr key={item.id}>
               <td className="px-5 py-4">
+                <div className="flex size-14 items-center justify-center rounded-2xl bg-[var(--color-muted-bg)]">
+                  {item.imageUrl ? (
+                    <div
+                      className="h-full w-full rounded-2xl bg-cover bg-center"
+                      style={{ backgroundImage: `url(${item.imageUrl})` }}
+                    />
+                  ) : (
+                    <ImageIcon className="size-5 text-[var(--color-primary)]" />
+                  )}
+                </div>
+              </td>
+              <td className="px-5 py-4">
                 <div className="space-y-1">
                   <p className="font-medium text-[var(--color-text)]">
                     {item.exerciseName}
@@ -332,6 +382,7 @@ export function AdminExercisesScreen({
       >
         <form ref={formRef} className="space-y-4" onSubmit={handleFormSubmit}>
           <input type="hidden" name="id" value={draft.id} />
+          <input type="hidden" name="imageUrl" value={draft.imageUrl} />
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <label className="text-sm font-medium text-[var(--color-text)]">
@@ -431,6 +482,20 @@ export function AdminExercisesScreen({
             </div>
             <div className="space-y-2 md:col-span-2">
               <label className="text-sm font-medium text-[var(--color-text)]">
+                Exercise Image
+              </label>
+              <ImageUpload
+                type="exercises"
+                value={draft.imageUrl}
+                selectedFile={selectedImageFile}
+                onFileChange={setSelectedImageFile}
+                onPreviewUrlChange={setPreviewImageUrl}
+                error={formErrors.imageUrl}
+                helperText="Upload an exercise image from your computer."
+              />
+            </div>
+            <div className="space-y-2 md:col-span-2">
+              <label className="text-sm font-medium text-[var(--color-text)]">
                 Required Equipment
               </label>
               <div className="grid gap-3 rounded-2xl border border-[var(--color-border)] p-4 md:grid-cols-2">
@@ -523,6 +588,29 @@ export function AdminExercisesScreen({
                   {formErrors.status}
                 </p>
               ) : null}
+            </div>
+          </div>
+          <div className="rounded-[1.5rem] border border-dashed border-[var(--color-border)] p-4">
+            <p className="text-sm font-medium text-[var(--color-text)]">Image Preview</p>
+            <div className="mt-3 max-w-xs rounded-[1.5rem] border border-[var(--color-border)] bg-white p-3">
+              <div className="flex aspect-[4/5] items-center justify-center rounded-[1rem] bg-[var(--color-muted-bg)]">
+                {previewImageUrl || draft.imageUrl ? (
+                  <div
+                    className="h-full w-full rounded-[1rem] bg-cover bg-center"
+                    style={{
+                      backgroundImage: `url(${previewImageUrl || draft.imageUrl})`,
+                    }}
+                  />
+                ) : (
+                  <ImageIcon className="size-8 text-[var(--color-primary)]" />
+                )}
+              </div>
+              <p className="mt-3 text-sm font-semibold text-[var(--color-text)]">
+                {draft.exerciseName || "Exercise name"}
+              </p>
+              <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
+                {draft.shortInstructions || "Short instructions preview"}
+              </p>
             </div>
           </div>
           {formErrors.form ? (

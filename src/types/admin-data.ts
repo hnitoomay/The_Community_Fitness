@@ -35,12 +35,13 @@ export type FocusCategory =
   | "Cardio"
   | "Stretching"
   | "Rest";
-export type GenderDisplay = "Male" | "Female" | "All";
+export type BodyGoalImageGender = "male" | "female" | "unisex";
 
 export interface AdminEquipmentItem {
   id: string;
   sourceNo?: number;
   equipmentName: string;
+  imageUrl: string;
   category: EquipmentCategory;
   quantity: number;
   unit: EquipmentUnit;
@@ -53,6 +54,7 @@ export interface AdminEquipmentItem {
 export interface AdminExerciseItem {
   id: string;
   exerciseName: string;
+  imageUrl: string;
   category: ExerciseCategory;
   difficulty: ExerciseDifficulty;
   requiredEquipmentIds: string[];
@@ -108,8 +110,9 @@ export interface AdminBodyGoalItem {
   id: string;
   goalLabel: string;
   shortDescription: string;
-  genderDisplay: GenderDisplay;
-  image: string;
+  maleImageUrl: string;
+  femaleImageUrl: string;
+  unisexImageUrl: string;
   workoutTemplateId?: string;
   nutritionTemplateId?: string;
   status: AdminRecordStatus;
@@ -206,6 +209,5 @@ export const mealCategoryOptions: FoodMealCategory[] = [
   "Drink",
 ];
 export const mealsPerDayOptions: Array<3 | 4 | 5> = [3, 4, 5];
-export const genderDisplayOptions: GenderDisplay[] = ["Male", "Female", "All"];
 export const statusOptions: AdminRecordStatus[] = ["Active", "Inactive"];
 

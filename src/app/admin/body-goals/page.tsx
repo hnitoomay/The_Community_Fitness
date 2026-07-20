@@ -15,7 +15,6 @@ function getSingleValue(value?: string | string[]) {
 interface AdminBodyGoalsPageProps {
   searchParams: Promise<{
     q?: string | string[];
-    genderDisplay?: string | string[];
     status?: string | string[];
   }>;
 }
@@ -26,14 +25,12 @@ export default async function AdminBodyGoalsPage({
   const params = await searchParams;
   const filters = {
     search: getSingleValue(params.q),
-    genderDisplay: getSingleValue(params.genderDisplay) || "All",
     status: getSingleValue(params.status) || "All",
   };
 
   const data = await Promise.all([
     listBodyGoals({
       search: filters.search,
-      genderDisplay: filters.genderDisplay as never,
       status: filters.status as never,
     }),
     listActiveWorkoutTemplateOptions(),

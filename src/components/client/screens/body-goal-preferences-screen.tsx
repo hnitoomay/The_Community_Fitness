@@ -20,7 +20,6 @@ import { yesNoOptions, yesNoneOptions } from "@/data/preference-options";
 import type {
   BodyGoalRecord,
   ClientPreferencesDraft,
-  GenderValue,
 } from "@/types/client-journey";
 
 type PreferenceErrors = Partial<Record<string, string>>;
@@ -29,7 +28,6 @@ interface BodyGoalPreferencesScreenProps {
   availableGoals: BodyGoalRecord[];
   initialSelectedGoalId: string;
   initialPreferences: ClientPreferencesDraft;
-  profileGender: GenderValue;
   loadError?: string;
 }
 
@@ -52,7 +50,6 @@ export function BodyGoalPreferencesScreen({
   availableGoals,
   initialSelectedGoalId,
   initialPreferences,
-  profileGender,
   loadError,
 }: BodyGoalPreferencesScreenProps) {
   const router = useRouter();
@@ -73,15 +70,7 @@ export function BodyGoalPreferencesScreen({
         ? "Your profile and measurements were saved successfully."
         : null;
 
-  const filteredGoals = useMemo(() => {
-    if (!profileGender || profileGender === "other") {
-      return availableGoals;
-    }
-
-    return availableGoals.filter(
-      (goal) => goal.genderGroup === "all" || goal.genderGroup === profileGender,
-    );
-  }, [availableGoals, profileGender]);
+  const resolvedGoals = useMemo(() => availableGoals, [availableGoals]);
 
   const validate = () => {
     const nextErrors: PreferenceErrors = {};
@@ -216,7 +205,7 @@ export function BodyGoalPreferencesScreen({
               <p className="text-sm text-[var(--color-error)]">{errors.goal}</p>
             ) : null}
             <div className="grid grid-cols-2 gap-3">
-              {filteredGoals.map((goal) => (
+              {resolvedGoals.map((goal) => (
                 <BodyGoalCard
                   key={goal.id}
                   goal={goal}

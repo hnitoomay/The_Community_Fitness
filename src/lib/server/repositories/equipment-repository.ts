@@ -20,6 +20,7 @@ export interface EquipmentWriteInput {
   id?: number;
   sourceNumber?: number | null;
   name: string;
+  imageUrl?: string | null;
   category: EquipmentCategory;
   quantity: number;
   unit: EquipmentUnit;
@@ -32,6 +33,7 @@ interface EquipmentRow {
   id: number;
   source_number: number | null;
   name: string;
+  image_url: string | null;
   category: EquipmentCategory;
   quantity: number;
   unit: EquipmentUnit;
@@ -46,6 +48,7 @@ function mapEquipmentRow(row: EquipmentRow): AdminEquipmentItem {
     id: String(row.id),
     sourceNo: row.source_number ?? undefined,
     equipmentName: row.name,
+    imageUrl: row.image_url ?? "",
     category: row.category,
     quantity: row.quantity,
     unit: row.unit,
@@ -88,6 +91,7 @@ export async function listEquipment(
         id,
         source_number,
         name,
+        image_url,
         category,
         quantity,
         unit,
@@ -112,6 +116,7 @@ export async function getEquipmentById(id: number) {
         id,
         source_number,
         name,
+        image_url,
         category,
         quantity,
         unit,
@@ -156,6 +161,7 @@ export async function saveEquipment(input: EquipmentWriteInput) {
   const params = [
     input.sourceNumber ?? null,
     input.name,
+    input.imageUrl ?? null,
     input.category,
     input.quantity,
     input.unit,
@@ -171,17 +177,19 @@ export async function saveEquipment(input: EquipmentWriteInput) {
         SET
           source_number = $1,
           name = $2,
-          category = $3,
-          quantity = $4,
-          unit = $5,
-          plan_selectable = $6,
-          availability = $7,
-          notes = $8
-        WHERE id = $9
+          image_url = $3,
+          category = $4,
+          quantity = $5,
+          unit = $6,
+          plan_selectable = $7,
+          availability = $8,
+          notes = $9
+        WHERE id = $10
         RETURNING
           id,
           source_number,
           name,
+          image_url,
           category,
           quantity,
           unit,
@@ -201,6 +209,7 @@ export async function saveEquipment(input: EquipmentWriteInput) {
       INSERT INTO gym_equipment (
         source_number,
         name,
+        image_url,
         category,
         quantity,
         unit,
@@ -208,11 +217,12 @@ export async function saveEquipment(input: EquipmentWriteInput) {
         availability,
         notes
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
       RETURNING
         id,
         source_number,
         name,
+        image_url,
         category,
         quantity,
         unit,
@@ -242,6 +252,7 @@ export async function updateEquipmentAvailability(
         id,
         source_number,
         name,
+        image_url,
         category,
         quantity,
         unit,

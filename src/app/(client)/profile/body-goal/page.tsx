@@ -14,19 +14,15 @@ export default async function BodyGoalPage() {
   let availableGoals = bodyGoals;
   let initialSelectedGoalId = profileDefaults.selectedBodyGoalId;
   let initialPreferences = profileDefaults.preferences;
-  let profileGender = profileDefaults.profile.gender;
   let loadError: string | undefined;
 
   try {
-    const [snapshot, activeGoals] = await Promise.all([
-      getClientOnboardingSnapshot(authUser.userId),
-      listActiveClientBodyGoals(),
-    ]);
+    const snapshot = await getClientOnboardingSnapshot(authUser.userId);
+    const activeGoals = await listActiveClientBodyGoals(snapshot.profile.gender);
 
     availableGoals = activeGoals;
     initialSelectedGoalId = snapshot.selectedBodyGoalId;
     initialPreferences = snapshot.preferences;
-    profileGender = snapshot.profile.gender;
   } catch {
     loadError = "Unable to load your saved body-goal preferences right now.";
   }
@@ -37,7 +33,6 @@ export default async function BodyGoalPage() {
         availableGoals={availableGoals}
         initialSelectedGoalId={initialSelectedGoalId}
         initialPreferences={initialPreferences}
-        profileGender={profileGender}
         loadError={loadError}
       />
     </Suspense>

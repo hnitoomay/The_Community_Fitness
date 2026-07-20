@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 
 import type { EquipmentActionState } from "@/app/admin/equipment/action-state";
 import { requireAdminUser } from "@/lib/server/auth";
+import { isManagedAdminImagePath } from "@/lib/server/admin-image-storage";
 import {
   findEquipmentSourceNumberConflict,
   saveEquipment,
@@ -58,6 +59,7 @@ export async function saveEquipmentAction(
   const idValue = parseOptionalNumber(formData.get("id"));
   const sourceNumberValue = parseOptionalNumber(formData.get("sourceNumber"));
   const name = String(formData.get("name") ?? "").trim();
+  const imageUrl = String(formData.get("imageUrl") ?? "").trim();
   const categoryValue = String(formData.get("category") ?? "");
   const quantityValue = parseOptionalNumber(formData.get("quantity"));
   const unitValue = String(formData.get("unit") ?? "");
@@ -102,6 +104,10 @@ export async function saveEquipmentAction(
     errors.availability = "Select a valid availability value.";
   }
 
+  if (imageUrl && !isManagedAdminImagePath(imageUrl, "equipment")) {
+    errors.imageUrl = "Upload a valid equipment image.";
+  }
+
   if (
     sourceNumberValue !== undefined &&
     !errors.sourceNumber &&
@@ -136,6 +142,7 @@ export async function saveEquipmentAction(
       id: idValue !== undefined ? idValue : undefined,
       sourceNumber: sourceNumberValue ?? null,
       name,
+      imageUrl: imageUrl || null,
       category,
       quantity,
       unit,
