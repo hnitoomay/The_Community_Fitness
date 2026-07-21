@@ -175,7 +175,7 @@ export function MeasurementUpdateScreen({ initialData }: MeasurementUpdateScreen
 
           {actionState.success && actionState.didInsertMeasurement ? (
             <PrimaryMobileButton onClick={() => router.push("/assessment")}>
-              AI Assessment ကို ပြန်လည်စစ်ဆေးမည်
+             Assessment ကို ပြန်လည်စစ်ဆေးမည်
             </PrimaryMobileButton>
           ) : (
             <PrimaryMobileButton onClick={handleSave} loading={isPending}>

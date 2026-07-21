@@ -1,8 +1,7 @@
 import type { AiAssessmentRecord } from "@/types/client-onboarding";
 
 const NO_ASSESSMENT_MESSAGE = "AI အကြံပြုချက် မရှိသေးပါ။";
-const OUTDATED_ASSESSMENT_MESSAGE =
-  "";
+const OUTDATED_ASSESSMENT_MESSAGE = "";
 
 export type AssessmentViewState =
   | {

@@ -8,6 +8,7 @@ import {
   CircleDashed,
   Clock3,
   Dumbbell,
+  Eye,
   MoonStar,
   Salad,
   Sparkles,
@@ -406,17 +407,19 @@ function CompletedHome({
         <ClientPage className="space-y-4 pb-24">
           {homeState.dashboardNotice ? (
             <ClientCard className="space-y-3">
-              <p className="text-sm leading-6 text-[var(--color-text-secondary)]">
-                {homeState.dashboardNotice.message}
-              </p>
-              <div className="flex justify-start">
+              <p className="flex items-start gap-3 text-sm leading-6 text-[var(--color-text-secondary)]">
+                <span className="min-w-0 flex-1">
+                  လက်ရှိ Plan သည် ယခင် Profile အချက်အလက်များအပေါ် အခြေခံထားပါသည်။
+                </span>
                 <Link
                   href={homeState.dashboardNotice.actionHref}
-                  className="inline-flex items-center gap-2 rounded-2xl border border-[var(--color-border)] px-4 py-3 text-sm font-medium text-[var(--color-text)] transition hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[rgba(214,31,44,0.16)]"
+                  aria-label={homeState.dashboardNotice.actionLabel}
+                  title={homeState.dashboardNotice.actionLabel}
+                  className="ml-auto inline-flex shrink-0 items-center justify-center text-[var(--color-text)] transition hover:text-[var(--color-primary)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[rgba(214,31,44,0.16)]"
                 >
-                  {homeState.dashboardNotice.actionLabel}
+                  <Eye className="h-6 w-6" strokeWidth={2.5} />
                 </Link>
-              </div>
+              </p>
             </ClientCard>
           ) : null}
           {activePlanPreview ? (
@@ -493,7 +496,7 @@ function CompletedHome({
                     </div>
 
                     {selectedDay.dayType === "rest" ? (
-                      <div className="rounded-2xl  border border-[var(--color-border)] bg-[var(--color-muted-bg)] px-4 py-4">
+                      <div className="rounded-2xl mt-2  border border-[var(--color-border)] bg-[var(--color-muted-bg)] px-4 py-4">
                         <p className="font-medium text-[var(--color-text)]">Take time to recover.</p>
                         <p className="mt-1 text-sm leading-6 text-[var(--color-text-secondary)]">
                           Light stretching, walking, hydration, and sleep will support your next
@@ -550,7 +553,7 @@ function CompletedHome({
                     </div>
                     <p className="text-sm leading-6 text-[var(--color-text-secondary)]">
                       {selectedDay.dayType === "rest"
-                        ? "This date is scheduled as recovery time. No workout session will be created."
+                        ? "This date is scheduled as recovery time. No workout."
                         : getStatusMessage(selectedDay)}
                     </p>
                   </ClientCard>

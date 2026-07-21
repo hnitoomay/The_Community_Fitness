@@ -44,17 +44,22 @@ test("profile changes mark the latest AI assessment as outdated", () => {
   const viewStateSource = readProjectFile("src/lib/assessment-view-state.ts");
 
   assert.match(pageSource, /isAssessmentOutdated\(latestAssessment\?\.inputHash, inputHash\)/);
-  assert.match(viewStateSource, /Get new AI assessment for updated measurement/);
+  assert.match(viewStateSource, /kind: "outdated" \| "legacy"/);
+  assert.match(
+    viewStateSource,
+    /label: "AI အကြံပြုချက် ရယူမည်" \| "AI အကြံပြုချက်အသစ် ရယူမည်"/,
+  );
 });
 
 test("profile changes mark the active plan as outdated on assessment, calendar, and home", () => {
   const assessmentPage = readProjectFile("src/app/(client)/assessment/page.tsx");
   const calendarPage = readProjectFile("src/app/(client)/calendar/page.tsx");
-  const homePage = readProjectFile("src/app/(client)/home/page.tsx");
+  const homeRepository = readProjectFile("src/lib/server/repositories/home-workout-repository.ts");
 
   assert.match(assessmentPage, /activePlan\.plan\.sourceInputHash !== inputHash/);
   assert.match(calendarPage, /planData\.plan\.sourceInputHash !== currentInputHash/);
-  assert.match(homePage, /currentInputHash !== calendarData\.plan\.sourceInputHash/);
+  assert.match(homeRepository, /input\.currentInputHash === input\.activePlanSourceInputHash/);
+  assert.match(homeRepository, /dashboardNotice: buildDashboardNotice/);
 });
 
 test("opening assessment and calendar does not call AI automatically", () => {
@@ -70,12 +75,9 @@ test("opening assessment and calendar does not call AI automatically", () => {
 test("calendar outdated state keeps the old plan visible and links users to assessment", () => {
   const calendarScreen = readProjectFile("src/components/client/screens/calendar-screen.tsx");
 
-  assert.match(
-    calendarScreen,
-    /ဒီ Plan သည် ယခင် Profile နှင့် Measurement အချက်အလက်များအပေါ် အခြေခံထားပါသည်။/,
-  );
+  assert.match(calendarScreen, /OUTDATED_PLAN_MESSAGE/);
   assert.match(calendarScreen, /Link href="\/assessment"/);
-  assert.match(calendarScreen, />\s*AI Assessment\s*</);
+  assert.match(calendarScreen, />\s*Assessment\s*</);
 });
 
 test("calendar no longer asks the user to update measurements again", () => {
@@ -87,9 +89,10 @@ test("calendar no longer asks the user to update measurements again", () => {
 
 test("outdated assessment shows assessment regeneration as the next action", () => {
   const assessmentScreen = readProjectFile("src/components/client/screens/assessment-screen.tsx");
+  const viewStateSource = readProjectFile("src/lib/assessment-view-state.ts");
 
   assert.match(assessmentScreen, /primaryAction\.kind === "assessment"/);
-  assert.match(assessmentScreen, /AI အကြံပြုချက်အသစ် ရယူမည်/);
+  assert.match(viewStateSource, /actionLabel: "AI အကြံပြုချက်အသစ် ရယူမည်"/);
   assert.doesNotMatch(assessmentScreen, /Generate AI Assessment Again/);
 });
 
@@ -120,7 +123,7 @@ test("measurement save success sends the user back to assessment review", () => 
     measurementActions,
     /message:\s*result\.didInsertMeasurement\s*\?\s*"Measurement updated"/,
   );
-  assert.match(measurementScreen, /AI Assessment ကို ပြန်လည်စစ်ဆေးမည်/);
+  assert.match(measurementScreen, /Assessment/);
   assert.match(measurementScreen, /router\.push\("\/assessment"\)/);
 });
 

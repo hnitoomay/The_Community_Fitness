@@ -133,7 +133,7 @@ function buildSetupSteps(nextStepId: HomeSetupStepId): HomeSetupStepState[] {
     },
     {
       id: "ai_assessment",
-      title: "AI Assessment",
+      title: "Assessment",
       description: "Review your current fitness analysis.",
     },
     {
@@ -234,7 +234,7 @@ function buildDashboardNotice(input: {
   if (!input.isAssessmentCurrent) {
     return {
       message:
-        "Profile အချက်အလက် ပြောင်းလဲထားသောကြောင့် AI Assessment အသစ် ရယူနိုင်ပါသည်။",
+        "Profile အချက်အလက် ပြောင်းလဲထားသောကြောင့် Assessment အသစ် ရယူနိုင်ပါသည်။",
       actionLabel: "Update Assessment",
       actionHref: "/assessment",
     };
@@ -290,7 +290,7 @@ function deriveHomeSetupState(input: {
       kind: "returning_assessment_only",
       title: isAssessmentCurrent ? "Assessment ready" : "Assessment available",
       description: isAssessmentCurrent
-        ? "Your latest AI assessment is ready. Generate your one-month plan."
+        ? "Your latest assessment is ready. Generate your one-month plan."
         : "Your profile has changed since the latest assessment. Review it and generate your next one-month plan.",
       primaryActionLabel: "Generate One-Month Plan",
       primaryActionHref: "/assessment",

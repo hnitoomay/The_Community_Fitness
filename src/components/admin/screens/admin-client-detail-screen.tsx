@@ -162,7 +162,7 @@ export function AdminClientDetailScreen({
       <section className="grid gap-6 xl:grid-cols-3">
         <Card className="rounded-[1.5rem]">
           <CardContent className="space-y-3">
-            <h2 className="text-lg font-semibold text-[var(--color-text)]">AI Assessment</h2>
+            <h2 className="text-lg font-semibold text-[var(--color-text)]">Assessment</h2>
             <Badge variant={getStatusVariant(data.aiAssessment.status)}>{data.aiAssessment.status}</Badge>
             <SummaryRow label="Generated" value={formatDate(data.aiAssessment.generatedAt)} />
           </CardContent>

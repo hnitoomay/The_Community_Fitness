@@ -89,7 +89,7 @@ export function CalendarScreen({
                 No generated plan yet
               </h2>
               <p className="text-sm leading-6 text-[var(--color-text-secondary)]">
-                Generate an AI assessment first, then create a one-month workout and nutrition
+                Generate an assessment first, then create a one-month workout and nutrition
                 plan.
               </p>
               <Link href="/assessment">
@@ -156,7 +156,7 @@ export function CalendarScreen({
               </p>
               <Link href="/assessment">
                 <Button size="lg" className="w-full">
-                  AI Assessment
+                  Assessment
                 </Button>
               </Link>
             </ClientCard>

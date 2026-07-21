@@ -165,7 +165,7 @@ export function AssessmentScreen({
   return (
     <ClientAuthGate>
       <ClientShell
-        title="AI Assessment"
+        title="Assessment"
         subtitle="Review your latest inputs, assessment status, and next step."
       >
         <ClientPage className="space-y-4">
@@ -192,7 +192,7 @@ export function AssessmentScreen({
                 <h2 className="text-2xl font-semibold tracking-tight text-[var(--color-text)]">
                   {loadingMode === "plan"
                     ? "Generating your updated one-month plan"
-                    : "Generating your updated AI assessment"}
+                    : "Generating your updated assessment"}
                 </h2>
                 <p className="text-sm leading-6 text-[var(--color-text-secondary)]">
                   {loadingMode === "plan"

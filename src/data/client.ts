@@ -38,7 +38,7 @@ export const clientBottomNavigation: NavigationItem[] = [
 
 export const clientDrawerLinks: ClientDrawerLink[] = [
   { href: "/profile", label: "Profile", icon: UserRound },
-  { href: "/assessment", label: "AI Assessment", icon: Sparkles },
+  { href: "/assessment", label: "Assessment", icon: Sparkles },
   { href: "/history", label: "History", icon: History },
   { href: "/settings", label: "Account Setting", icon: Settings },
   { action: "logout", label: "Logout", icon: HeartPulse },
