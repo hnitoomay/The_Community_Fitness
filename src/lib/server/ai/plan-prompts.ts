@@ -58,10 +58,15 @@ Do not prescribe treatment or medicine.
 Do not invent exercise names.
 Do not rename exercises.
 Only select exerciseId values from the supplied candidate list.
+Only select exercises that clearly use sets and repetitions.
 Return exactly the supplied day numbers.
 Rest days must contain no exercises.
 Non-rest days must contain exactly the requiredExerciseCount.
-Keep workoutNotes and instructions short, practical, and in natural Burmese.
+Keep workoutNotes short, practical, and in natural Burmese.
+Do not return duration, minutes, seconds, time-based cardio targets, or rest timers for exercises.
+Do not return exercise instruction sentences.
+Do not repeat exercise names in Burmese.
+Do not return sentences ending with "လုပ်ပါ။".
 When the client is a beginner, use gradual beginner-friendly progression.
 Respect medical conditions, injuries, and disliked exercises.
 Use only allowedExerciseIds for each day.
@@ -83,7 +88,8 @@ Do not invent foods.
 Only select foodId values from the supplied approved food list.
 Exclude allergies, restrictions, and disliked foods.
 Follow the supplied nutrition template meal structure exactly.
-Keep nutritionNotes and item notes short, practical, and in natural Burmese.
+Set nutritionNotes to exactly "သင့်ရည်မှန်းချက်နှင့် ကိုက်ညီသော အစားအသောက်အစီအစဉ်။"
+Do not add generic food descriptions or item notes.
 State food direction according to the body goal without claiming medical precision.
 `.trim();
 
@@ -98,7 +104,7 @@ export function buildWorkoutPlanUserPrompt(input: {
 }) {
   const payload = {
     instruction:
-      "Use only this JSON. Build exactly 7 days. Each day must keep its supplied dayNumber and use only its allowedExerciseIds. Every non-rest day must return exactly requiredExerciseCount exercises. Rest days must return an empty exercises array.",
+      "Use only this JSON. Build exactly 7 days. Each day must keep its supplied dayNumber and use only its allowedExerciseIds. Every non-rest day must return exactly requiredExerciseCount exercises. Rest days must return an empty exercises array. For each exercise return only exerciseId, sets, and repetitions.",
     profile: input.profile,
     latestAssessment: input.latestAssessment,
     workoutPlanSkeleton: input.workoutPlanSkeleton.map((day) => ({
@@ -129,7 +135,7 @@ export function buildWorkoutRepairUserPrompt(input: {
 }) {
   const payload = {
     instruction:
-      "Repair only these invalid days. Return only the listed day numbers. Keep every day's exact requiredExerciseCount and use only that day's allowedExerciseIds.",
+      "Repair only these invalid days. Return only the listed day numbers. Keep every day's exact requiredExerciseCount and use only that day's allowedExerciseIds. For each exercise return only exerciseId, sets, and repetitions.",
     profile: input.profile,
     latestAssessment: input.latestAssessment,
     invalidDays: input.invalidDays.map((day) => ({
@@ -166,7 +172,7 @@ export function buildNutritionPlanUserPrompt(input: {
 }) {
   const payload = {
     instruction:
-      "Use only this JSON. Build exactly 7 days. Every day must follow the supplied mealStructure. Use only supplied foodId values.",
+      "Use only this JSON. Build exactly 7 days. Every day must follow the supplied mealStructure. Use only supplied foodId values. Set nutritionNotes to the exact supplied sentence and keep meal items limited to foodId and servingDescription.",
     profile: input.profile,
     latestAssessment: input.latestAssessment,
     nutritionTemplate: input.nutritionTemplate,

@@ -215,6 +215,9 @@ interface ExpandedWorkoutDay {
   }>;
 }
 
+const DEFAULT_NUTRITION_SUMMARY =
+  "သင့်ရည်မှန်းချက်နှင့် ကိုက်ညီသော အစားအသောက်အစီအစဉ်။";
+
 function getRequiredEnv(name: string) {
   const value = process.env[name];
 
@@ -764,6 +767,18 @@ function trimWorkoutInstruction(instructions: string) {
   return normalized.length > 120 ? `${normalized.slice(0, 117)}...` : normalized;
 }
 
+function supportsSetAndRepPrescription(
+  candidate: Pick<WorkoutExerciseCandidate, "defaultSets" | "defaultRepetitionsOrDuration">,
+) {
+  if (candidate.defaultSets === null) {
+    return false;
+  }
+
+  return !/\b(?:sec|secs|second|seconds|min|mins|minute|minutes)\b/i.test(
+    candidate.defaultRepetitionsOrDuration,
+  );
+}
+
 function compareWorkoutCandidates(
   left: WorkoutExerciseCandidate,
   right: WorkoutExerciseCandidate,
@@ -800,7 +815,11 @@ function selectWorkoutCandidatesForDay(
 ) {
   const allowedCategories = new Set(resolveRelevantExerciseCategories(day.focusCategory));
   return candidates
-    .filter((candidate) => allowedCategories.has(candidate.category))
+    .filter(
+      (candidate) =>
+        allowedCategories.has(candidate.category) &&
+        supportsSetAndRepPrescription(candidate),
+    )
     .sort(compareWorkoutCandidates);
 }
 
@@ -1166,21 +1185,21 @@ function combineWorkoutAndNutritionPlans(input: {
       focusCategory: day.focusCategory,
       estimatedDurationMinutes: day.estimatedDurationMinutes,
       workoutNotes: day.workoutNotes,
-      nutritionNotes: nutritionDay.nutritionNotes,
+      nutritionNotes: DEFAULT_NUTRITION_SUMMARY,
       exercises: day.exercises.map((exercise) => ({
         exerciseId: exercise.exerciseId,
         sets: exercise.sets,
         repetitions: exercise.repetitions,
-        durationMinutes: exercise.durationMinutes,
-        restSeconds: exercise.restSeconds,
-        instructions: exercise.instructions,
+        durationMinutes: null,
+        restSeconds: null,
+        instructions: null,
       })),
       meals: nutritionDay.meals.map((meal) => ({
         mealType: meal.mealType,
         items: meal.items.map((item) => ({
           foodId: item.foodId,
           servingDescription: item.servingDescription,
-          notes: item.notes,
+          notes: null,
         })),
       })),
     });
@@ -1259,11 +1278,11 @@ function createFallbackWorkoutNote(day: WorkoutSkeletonDay) {
     case "rest":
       return "အနားယူပြီး ခန္ဓာကိုယ်ပြန်လည်သက်သာအောင် နေပါ။";
     case "cardio":
-      return `${day.focusCategory} ကို အလယ်အလတ်အရှိန်နဲ့ လုပ်ပါ။`;
+      return `${day.focusCategory} ကို အလယ်အလတ်အရှိန်နဲ့ ထိန်းပါ။`;
     case "stretching":
-      return `${day.focusCategory} ကို ဖြည်းဖြည်းနဲ့ ထိန်းပြီး လုပ်ပါ။`;
+      return `${day.focusCategory} ကို ဖြည်းဖြည်းနဲ့ ထိန်းပါ။`;
     default:
-      return `${day.focusCategory} ကို ပုံစံမှန်အောင် ထိန်းပြီး လုပ်ပါ။`;
+      return `${day.focusCategory} ကို ပုံစံမှန်အောင် ထိန်းပါ။`;
   }
 }
 
@@ -1298,18 +1317,12 @@ function createFallbackWorkoutWeek(days: WorkoutSkeletonDay[]) {
           : day.candidateExercises.slice(0, day.requiredExerciseCount).map((candidate) => ({
               exerciseId: candidate.id,
               sets: candidate.defaultSets,
-              repetitions:
-                candidate.defaultSets === null
-                  ? null
-                  : candidate.defaultRepetitionsOrDuration,
-              durationMinutes:
-                candidate.defaultSets === null
-                  ? Number.parseInt(candidate.defaultRepetitionsOrDuration, 10) || null
-                  : null,
-              restSeconds: candidate.defaultSets === null ? null : 60,
+              repetitions: candidate.defaultRepetitionsOrDuration,
+              durationMinutes: null,
+              restSeconds: null,
               instructions:
                 candidate.instructions.trim() ||
-                "ဖြည်းဖြည်းနဲ့ ပုံစံမှန်အောင် လုပ်ပါ။",
+                "ဖြည်းဖြည်းနဲ့ ပုံစံမှန်အောင် ထိန်းပါ။",
             })),
     })),
   } satisfies WorkoutBaseWeekResponse;
@@ -1335,26 +1348,12 @@ function applyExerciseProgression(
     }
   }
 
-  if (progressed.durationMinutes !== null) {
-    if (weekNumber >= 2) {
-      progressed.durationMinutes = Math.max(1, progressed.durationMinutes + 5);
-    }
-
-    if (weekNumber === 4 && /beginner/i.test(difficulty)) {
-      progressed.durationMinutes = Math.max(1, progressed.durationMinutes - 5);
-    }
-  }
-
   if (weekNumber === 3 && progressed.sets !== null && exerciseIndex === 0) {
     progressed.sets += 1;
   }
 
   if (weekNumber === 4 && /beginner/i.test(difficulty) && progressed.sets !== null && exerciseIndex === 0) {
     progressed.sets = Math.max(1, progressed.sets - 1);
-  }
-
-  if (progressed.restSeconds !== null) {
-    progressed.restSeconds = Math.max(0, progressed.restSeconds);
   }
 
   return progressed;
@@ -1403,7 +1402,12 @@ export function expandBaseWeekToFourWeeks(input: {
             ? []
             : baseDay.exercises.map((exercise, exerciseIndex) =>
                 applyExerciseProgression(
-                  exercise,
+                  {
+                    ...exercise,
+                    durationMinutes: null,
+                    restSeconds: null,
+                    instructions: null,
+                  },
                   weekNumber,
                   exerciseIndex,
                   input.difficulty,

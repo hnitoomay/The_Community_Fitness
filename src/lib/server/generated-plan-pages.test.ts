@@ -134,7 +134,7 @@ test("nutrition bottom navigation never points to a nonexistent nutrition route"
   const navigationComponent = readProjectFile("src/components/client/client-bottom-navigation.tsx");
 
   assert.doesNotMatch(navigationData, /\/nutrition/);
-  assert.match(navigationComponent, /dailyPlanTargets\.nutritionHref/);
+  assert.match(navigationComponent, /resolvedDailyPlanTargets\.nutritionHref/);
   assert.match(navigationComponent, /fetch\("\/api\/client-navigation\/daily-plan-target"/);
 });
 

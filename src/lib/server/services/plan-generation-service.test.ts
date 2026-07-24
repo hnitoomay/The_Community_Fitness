@@ -132,8 +132,8 @@ function createWorkoutCandidates(): WorkoutExerciseCandidate[] {
     { id: 5, name: "Seated Row", category: "Back", difficulty: "Beginner", defaultSets: 3, defaultRepetitionsOrDuration: "10-12", instructions: "Pull to the ribs", requiredEquipmentNames: ["Cable"], exactDislikeMatch: false, broadDislikeMatch: false },
     { id: 6, name: "Lat Pulldown", category: "Back", difficulty: "Beginner", defaultSets: 3, defaultRepetitionsOrDuration: "10-12", instructions: "Lower to the chest", requiredEquipmentNames: ["Lat Pulldown"], exactDislikeMatch: false, broadDislikeMatch: false },
     { id: 23, name: "Band Row", category: "Back", difficulty: "Beginner", defaultSets: 2, defaultRepetitionsOrDuration: "12-15", instructions: "Pull smoothly", requiredEquipmentNames: [], exactDislikeMatch: false, broadDislikeMatch: false },
-    { id: 7, name: "Bike", category: "Cardio", difficulty: "Beginner", defaultSets: null, defaultRepetitionsOrDuration: "20", instructions: "Ride at a steady pace", requiredEquipmentNames: ["Bike"], exactDislikeMatch: false, broadDislikeMatch: false },
-    { id: 8, name: "Hamstring Stretch", category: "Stretching", difficulty: "Beginner", defaultSets: null, defaultRepetitionsOrDuration: "15", instructions: "Hold gently", requiredEquipmentNames: [], exactDislikeMatch: false, broadDislikeMatch: false },
+    { id: 7, name: "Agility Ladder Quick Steps", category: "Cardio", difficulty: "Beginner", defaultSets: 3, defaultRepetitionsOrDuration: "10", instructions: "Quick controlled steps", requiredEquipmentNames: ["Agility Ladder"], exactDislikeMatch: false, broadDislikeMatch: false },
+    { id: 8, name: "Hip Flexor Stretch", category: "Stretching", difficulty: "Beginner", defaultSets: 2, defaultRepetitionsOrDuration: "10", instructions: "Move with control", requiredEquipmentNames: [], exactDislikeMatch: false, broadDislikeMatch: false },
     { id: 99, name: "Burpee", category: "Cardio", difficulty: "Beginner", defaultSets: 3, defaultRepetitionsOrDuration: "10", instructions: "Fast pace", requiredEquipmentNames: [], exactDislikeMatch: true, broadDislikeMatch: false },
   ];
 }
@@ -143,20 +143,20 @@ function createWorkoutWeek() {
     days: [
       {
         dayNumber: 1,
-        workoutNotes: "ခြေထောက်နေ့ကို ထိန်းပြီး လုပ်ပါ။",
+        workoutNotes: "Leg day with controlled form.",
         estimatedDurationMinutes: 45,
         exercises: [
-          { exerciseId: 1, sets: 3, repetitions: "10-12", durationMinutes: null, restSeconds: 60, instructions: "တည်ငြိမ်အောင် ဖိတင်ပါ။" },
-          { exerciseId: 2, sets: 3, repetitions: "10-12", durationMinutes: null, restSeconds: 60, instructions: "ဒူးလမ်းကြောင်းကို ထိန်းပါ။" },
+          { exerciseId: 1, sets: 3, repetitions: "10-12" },
+          { exerciseId: 2, sets: 3, repetitions: "10-12" },
         ],
       },
       {
         dayNumber: 2,
-        workoutNotes: "ရင်ဘတ်နေ့ကို ပုံမှန်နှုန်းနဲ့ လုပ်ပါ။",
+        workoutNotes: "Chest day with steady tempo.",
         estimatedDurationMinutes: 45,
         exercises: [
-          { exerciseId: 3, sets: 3, repetitions: "10-12", durationMinutes: null, restSeconds: 60, instructions: "ဖိတင်ချိန်ကို ညီအောင်လုပ်ပါ။" },
-          { exerciseId: 4, sets: 3, repetitions: "8-10", durationMinutes: null, restSeconds: 60, instructions: "ကိုယ်လုံးကို တန်းတန်းထားပါ။" },
+          { exerciseId: 3, sets: 3, repetitions: "10-12" },
+          { exerciseId: 4, sets: 3, repetitions: "8-10" },
         ],
       },
       {
@@ -167,27 +167,27 @@ function createWorkoutWeek() {
       },
       {
         dayNumber: 4,
-        workoutNotes: "ကျောနေ့ကို အရွေ့အကွာအဝေးပြည့်အောင် လုပ်ပါ။",
+        workoutNotes: "Back day with full range.",
         estimatedDurationMinutes: 45,
         exercises: [
-          { exerciseId: 5, sets: 3, repetitions: "10-12", durationMinutes: null, restSeconds: 60, instructions: "လက်မောင်းမဟုတ်ဘဲ ကျောနဲ့ ဆွဲပါ။" },
-          { exerciseId: 6, sets: 3, repetitions: "10-12", durationMinutes: null, restSeconds: 60, instructions: "ချတင်နှုန်းကို ထိန်းပါ။" },
+          { exerciseId: 5, sets: 3, repetitions: "10-12" },
+          { exerciseId: 6, sets: 3, repetitions: "10-12" },
         ],
       },
       {
         dayNumber: 5,
-        workoutNotes: "ကာဒီယိုကို အလယ်အလတ်နှုန်းနဲ့ လုပ်ပါ။",
+        workoutNotes: "Cardio day with repeatable reps.",
         estimatedDurationMinutes: 25,
         exercises: [
-          { exerciseId: 7, sets: null, repetitions: null, durationMinutes: 20, restSeconds: null, instructions: "အသက်ရှူနှုန်းကို ထိန်းပါ။" },
+          { exerciseId: 7, sets: 3, repetitions: "10" },
         ],
       },
       {
         dayNumber: 6,
-        workoutNotes: "ဆန့်လှုပ်ရှားမှုကို ဖြည်းဖြည်းချင်း ထိန်းပြီး လုပ်ပါ။",
+        workoutNotes: "Stretching day with controlled reps.",
         estimatedDurationMinutes: 20,
         exercises: [
-          { exerciseId: 8, sets: null, repetitions: null, durationMinutes: 15, restSeconds: null, instructions: "နာကျင်မှုမရောက်အောင် ထိန်းပါ။" },
+          { exerciseId: 8, sets: 2, repetitions: "10" },
         ],
       },
       {
@@ -204,19 +204,19 @@ function createNutritionPlan(): NutritionPlanResponse {
   return {
     days: Array.from({ length: 7 }, (_, dayIndex) => ({
       dayNumber: dayIndex + 1,
-      nutritionNotes: "အစာကို အချိန်မှန် စားပါ။",
+      nutritionNotes: "သင့်ရည်မှန်းချက်နှင့် ကိုက်ညီသော အစားအသောက်အစီအစဉ်။",
       meals: [
         {
           mealType: "Breakfast",
-          items: [{ foodId: 100, servingDescription: "1 bowl", notes: "Breakfast note" }],
+          items: [{ foodId: 100, servingDescription: "1 bowl" }],
         },
         {
           mealType: "Lunch",
-          items: [{ foodId: 101, servingDescription: "1 plate", notes: "Lunch note" }],
+          items: [{ foodId: 101, servingDescription: "1 plate" }],
         },
         {
           mealType: "Dinner",
-          items: [{ foodId: 102, servingDescription: "1 plate", notes: "Dinner note" }],
+          items: [{ foodId: 102, servingDescription: "1 plate" }],
         },
       ],
     })),
@@ -448,14 +448,6 @@ test("progression values remain valid", () => {
     for (const exercise of day.exercises) {
       if (exercise.sets !== null) {
         assert.equal(exercise.sets >= 0, true);
-      }
-
-      if (exercise.durationMinutes !== null) {
-        assert.equal(exercise.durationMinutes >= 0, true);
-      }
-
-      if (exercise.restSeconds !== null) {
-        assert.equal(exercise.restSeconds >= 0, true);
       }
 
       if (exercise.repetitions) {

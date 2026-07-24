@@ -5,7 +5,6 @@ import { z } from "zod";
 const nutritionMealItemSchema = z.object({
   foodId: z.number().int().positive(),
   servingDescription: z.string().trim().min(1).nullable(),
-  notes: z.string().trim().min(1).nullable(),
 });
 
 const nutritionMealSchema = z.object({
@@ -68,16 +67,13 @@ export const nutritionPlanJsonSchema = {
                     items: {
                       type: "object",
                       additionalProperties: false,
-                      required: ["foodId", "servingDescription", "notes"],
+                      required: ["foodId", "servingDescription"],
                       properties: {
                         foodId: {
                           type: "integer",
                           minimum: 1,
                         },
                         servingDescription: {
-                          type: ["string", "null"],
-                        },
-                        notes: {
                           type: ["string", "null"],
                         },
                       },

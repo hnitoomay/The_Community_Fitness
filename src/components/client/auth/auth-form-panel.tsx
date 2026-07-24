@@ -12,7 +12,7 @@ export function AuthFormPanel({
   children,
 }: AuthFormPanelProps) {
   return (
-    <section className="relative z-10 -mt-8 flex flex-1 flex-col rounded-t-[2.5rem] bg-white px-5 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-8 shadow-[0_-18px_40px_rgba(17,17,17,0.08)]">
+    <section className="relative z-10 -mt-8 flex min-h-0 flex-1 flex-col overflow-y-auto rounded-t-[2.5rem] bg-white px-5 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-8 shadow-[0_-18px_40px_rgba(17,17,17,0.08)] app-scrollbar">
       <div className="mx-auto flex w-full max-w-[24rem] flex-1 flex-col">
         <div className="space-y-2 text-center">
           <h1 className="text-[2rem] font-semibold tracking-tight text-[var(--color-text)]">

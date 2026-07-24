@@ -102,3 +102,9 @@ textarea:disabled {
   border-radius: 999px;
   background: #d1d5db;
 }
+
+html.auth-route-lock,
+body.auth-route-lock {
+  height: 100dvh;
+  overflow: hidden;
+}

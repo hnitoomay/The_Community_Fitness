@@ -66,10 +66,29 @@ test("exercise completion action revalidates workout progress surfaces", () => {
 test("workout screen uses a compact skip action and removes the old header duration subtitle", () => {
   const source = readProjectFile("src/components/client/screens/workout-day-screen.tsx");
 
-  assert.match(source, /size="sm"/);
   assert.match(source, /Undo Skip/);
   assert.match(source, /Skip Today/);
+  assert.match(source, /setSkipConfirmOpen\(true\)/);
   assert.doesNotMatch(source, /subtitle=\{/);
   assert.doesNotMatch(source, /estimatedDurationMinutes \?\? 0/);
   assert.doesNotMatch(source, /Duration not specified/);
+});
+
+test("exercise cards use shared prescription formatting and remove manual inputs", () => {
+  const source = readProjectFile("src/components/client/screens/workout-day-screen.tsx");
+
+  assert.match(source, /formatExercisePrescription/);
+  assert.doesNotMatch(source, /Completed sets/);
+  assert.doesNotMatch(source, /Actual reps/);
+  assert.doesNotMatch(source, /updateWorkoutExercisePerformanceAction/);
+  assert.doesNotMatch(source, /<Input/);
+});
+
+test("nutrition summary keeps the simplified reminder copy", () => {
+  const source = readProjectFile("src/components/client/screens/workout-day-screen.tsx");
+
+  assert.match(source, /DAILY_NUTRITION_SUMMARY/);
+  assert.match(source, /ရှောင်ရန်:/);
+  assert.doesNotMatch(source, /item\.notes/);
+  assert.doesNotMatch(source, /Allergy \/ restriction note:/);
 });

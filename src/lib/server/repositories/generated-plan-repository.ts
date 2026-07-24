@@ -139,6 +139,8 @@ interface ExerciseDetailRow {
   exercise_name: string;
   category: string;
   image_url: string | null;
+  default_sets: number | null;
+  default_reps_or_duration: string | null;
   default_instructions: string;
   required_equipment_names: Array<string | null>;
   sets: number | null;
@@ -224,6 +226,8 @@ function mapExerciseDetailRow(row: ExerciseDetailRow): GeneratedPlanExerciseDeta
     exerciseName: row.exercise_name,
     category: row.category,
     imageUrl: row.image_url,
+    defaultSets: row.default_sets,
+    defaultRepetitionsOrDuration: row.default_reps_or_duration,
     defaultInstructions: row.default_instructions,
     requiredEquipmentNames: row.required_equipment_names.filter(
       (value): value is string => typeof value === "string",
@@ -665,6 +669,8 @@ export async function listEligibleWorkoutCandidates(
         FROM exercises AS e
         WHERE e.status = 'Active'
           AND e.category = ANY($1::text[])
+          AND e.default_sets IS NOT NULL
+          AND e.default_reps_or_duration !~* '(sec|second|min|minute)'
           AND NOT EXISTS (
             SELECT 1
             FROM exercise_equipment_requirements AS eer
@@ -1218,6 +1224,8 @@ export async function getGeneratedPlanDayDetailsForUser(
           e.name AS exercise_name,
           e.category,
           e.image_url,
+          e.default_sets,
+          e.default_reps_or_duration,
           e.instructions AS default_instructions,
           COALESCE(
             ARRAY_AGG(re.equipment_name ORDER BY re.equipment_name)
@@ -1242,6 +1250,8 @@ export async function getGeneratedPlanDayDetailsForUser(
           e.name,
           e.category,
           e.image_url,
+          e.default_sets,
+          e.default_reps_or_duration,
           e.instructions,
           gpe.sets,
           gpe.repetitions,

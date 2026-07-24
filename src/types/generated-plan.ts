@@ -48,6 +48,8 @@ export interface GeneratedPlanExerciseDetail {
   exerciseName: string;
   category: string;
   imageUrl: string | null;
+  defaultSets: number | null;
+  defaultRepetitionsOrDuration: string | null;
   defaultInstructions: string;
   requiredEquipmentNames: string[];
   sets: number | null;

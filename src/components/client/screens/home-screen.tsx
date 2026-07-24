@@ -126,12 +126,8 @@ function getPrimaryActionLabel(day: HomeWorkoutDayPreview) {
 }
 
 function formatExercisePrescription(exercise: HomeWorkoutExercisePreview) {
-  if (exercise.durationMinutes !== null && exercise.durationMinutes > 0) {
-    return `${exercise.durationMinutes} min`;
-  }
-
   if (exercise.sets !== null && exercise.repetitions) {
-    return `${exercise.sets} sets x ${exercise.repetitions}`;
+    return `${exercise.sets} sets × ${exercise.repetitions} reps`;
   }
 
   if (exercise.sets !== null) {
@@ -139,10 +135,10 @@ function formatExercisePrescription(exercise: HomeWorkoutExercisePreview) {
   }
 
   if (exercise.repetitions) {
-    return exercise.repetitions;
+    return `${exercise.repetitions} reps`;
   }
 
-  return "Plan details saved";
+  return null;
 }
 
 function getWorkoutFocus(day: HomeWorkoutDayPreview) {
@@ -320,9 +316,11 @@ function ExerciseRow({ exercise }: { exercise: HomeWorkoutExercisePreview }) {
             </p>
           </div>
           <div className="shrink-0 text-right">
-            <p className="text-xs font-medium text-[var(--color-text)]">
-              {formatExercisePrescription(exercise)}
-            </p>
+            {formatExercisePrescription(exercise) ? (
+              <p className="text-xs font-medium text-[var(--color-text)]">
+                {formatExercisePrescription(exercise)}
+              </p>
+            ) : null}
             {exercise.completed ? (
               <span className="mt-1 inline-flex items-center gap-1 text-[11px] font-medium text-[var(--color-success)]">
                 <CheckCircle2 className="size-3.5" />

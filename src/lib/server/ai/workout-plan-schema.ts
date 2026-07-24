@@ -11,9 +11,6 @@ const workoutExerciseSchema = z.object({
   exerciseId: z.number().int().positive(),
   sets: z.number().int().min(0).nullable(),
   repetitions: z.string().trim().min(1).nullable(),
-  durationMinutes: z.number().int().min(0).nullable(),
-  restSeconds: z.number().int().min(0).nullable(),
-  instructions: z.string().trim().min(1),
 });
 
 function createWorkoutDaySchema(day: WorkoutGenerationDaySpec) {
@@ -111,9 +108,6 @@ function createWorkoutDayJsonSchema(day: WorkoutGenerationDaySpec) {
             "exerciseId",
             "sets",
             "repetitions",
-            "durationMinutes",
-            "restSeconds",
-            "instructions",
           ],
           properties: {
             exerciseId: {
@@ -126,17 +120,6 @@ function createWorkoutDayJsonSchema(day: WorkoutGenerationDaySpec) {
             },
             repetitions: {
               type: ["string", "null"],
-            },
-            durationMinutes: {
-              type: ["integer", "null"],
-              minimum: 0,
-            },
-            restSeconds: {
-              type: ["integer", "null"],
-              minimum: 0,
-            },
-            instructions: {
-              type: "string",
             },
           },
         },

@@ -21,7 +21,6 @@ import {
   skipWorkoutAction,
   toggleWorkoutExerciseCompletionAction,
   undoSkipWorkoutAction,
-  updateWorkoutExercisePerformanceAction,
 } from "@/app/(client)/workout/[date]/actions";
 import { ClientAuthGate } from "@/components/client/client-auth-gate";
 import { ClientCard } from "@/components/client/client-card";
@@ -29,13 +28,13 @@ import { ClientPage } from "@/components/client/client-page";
 import { ClientShell } from "@/components/client/client-shell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Modal } from "@/components/ui/modal";
 import { Textarea } from "@/components/ui/textarea";
 import {
   buildDailyPlanHref,
   type DailyPlanTab,
 } from "@/lib/client-navigation-state";
+import { formatExercisePrescription } from "@/lib/format-exercise-prescription";
 import type {
   ActiveGeneratedPlanCalendarData,
   GeneratedPlanDayDetails,
@@ -54,10 +53,8 @@ interface WorkoutDayScreenProps {
   isPlanReadOnly?: boolean;
 }
 
-interface ExerciseDraftState {
-  completedSets: string;
-  actualRepetitions: string;
-}
+const DAILY_NUTRITION_SUMMARY =
+  "သင့်ရည်မှန်းချက်နှင့် ကိုက်ညီသော အစားအသောက်အစီအစဉ်။";
 
 function groupMealsByType(dayDetails: GeneratedPlanDayDetails) {
   return dayDetails.meals.reduce<Record<string, typeof dayDetails.meals>>((acc, meal) => {
@@ -82,30 +79,6 @@ function createEmptyTracking(totalExercises: number): WorkoutSessionTrackingDeta
     completionPercent: 0,
     exerciseLogs: [],
   };
-}
-
-function buildExerciseDrafts(
-  exercises: GeneratedPlanExerciseDetail[],
-  tracking: WorkoutSessionTrackingDetail,
-) {
-  const draftEntries = exercises.map((exercise) => {
-    const log = tracking.exerciseLogs.find(
-      (entry) => entry.generatedPlanExerciseId === exercise.id,
-    );
-
-    return [
-      exercise.id,
-      {
-        completedSets:
-          log?.completedSets === null || log?.completedSets === undefined
-            ? ""
-            : String(log.completedSets),
-        actualRepetitions: log?.actualRepetitions ?? "",
-      },
-    ] as const;
-  });
-
-  return Object.fromEntries(draftEntries) as Record<number, ExerciseDraftState>;
 }
 
 function getExerciseTracking(
@@ -145,6 +118,15 @@ function getStatusVariant(status: WorkoutSessionTrackingDetail["status"]) {
     default:
       return "outline";
   }
+}
+
+function formatExerciseCategory(exercise: GeneratedPlanExerciseDetail) {
+  const equipmentLabel =
+    exercise.requiredEquipmentNames.length > 0
+      ? exercise.requiredEquipmentNames.join(", ")
+      : "Bodyweight";
+
+  return `${equipmentLabel} - ${exercise.category}`;
 }
 
 function formatActionMessage(result: WorkoutTrackingActionState) {
@@ -210,9 +192,6 @@ function WorkoutDayScreenState({
   } | null>(null);
   const [pendingExerciseId, setPendingExerciseId] = useState<number | null>(null);
   const [tracking, setTracking] = useState<WorkoutSessionTrackingDetail>(baseTracking);
-  const [exerciseDrafts, setExerciseDrafts] = useState<Record<number, ExerciseDraftState>>(
-    buildExerciseDrafts(dayDetails.exercises, baseTracking),
-  );
   const [isPending, startTransition] = useTransition();
 
   const horizontalDates = calendarData.days.filter(
@@ -254,7 +233,6 @@ function WorkoutDayScreenState({
 
       if (result.success && result.tracking) {
         setTracking(result.tracking);
-        setExerciseDrafts(buildExerciseDrafts(dayDetails.exercises, result.tracking));
         setFeedbackDifficulty(result.tracking.difficultyRating);
         setFeedbackPain(result.tracking.painReported);
         setFeedbackNote(result.tracking.feedbackNote ?? "");
@@ -330,7 +308,6 @@ function WorkoutDayScreenState({
 
       if (result.success && result.tracking) {
         setTracking(result.tracking);
-        setExerciseDrafts(buildExerciseDrafts(dayDetails.exercises, result.tracking));
         setFeedbackDifficulty(result.tracking.difficultyRating);
         setFeedbackPain(result.tracking.painReported);
         setFeedbackNote(result.tracking.feedbackNote ?? "");
@@ -340,61 +317,6 @@ function WorkoutDayScreenState({
 
       setPendingExerciseId(null);
     });
-  };
-
-  const handleExerciseDraftChange = (
-    exerciseId: number,
-    field: keyof ExerciseDraftState,
-    value: string,
-  ) => {
-    setExerciseDrafts((current) => ({
-      ...current,
-      [exerciseId]: {
-        completedSets: current[exerciseId]?.completedSets ?? "",
-        actualRepetitions: current[exerciseId]?.actualRepetitions ?? "",
-        [field]: value,
-      },
-    }));
-  };
-
-  const handleExerciseDraftBlur = (exercise: GeneratedPlanExerciseDetail) => {
-    if (isReadOnly) {
-      return;
-    }
-
-    const draft = exerciseDrafts[exercise.id];
-    const currentLog = getExerciseTracking(tracking, exercise.id);
-    const normalizedSets = draft.completedSets.trim();
-    const nextCompletedSets = normalizedSets === "" ? null : Number(normalizedSets);
-    const nextRepetitions = draft.actualRepetitions.trim() || null;
-
-    if (
-      nextCompletedSets !== null &&
-      (!Number.isInteger(nextCompletedSets) || nextCompletedSets < 0)
-    ) {
-      setMessage({
-        type: "error",
-        text: "Completed sets must be zero or greater.",
-      });
-      return;
-    }
-
-    if (
-      currentLog?.completedSets === nextCompletedSets &&
-      (currentLog?.actualRepetitions ?? null) === nextRepetitions
-    ) {
-      return;
-    }
-
-    setPendingExerciseId(exercise.id);
-    runTrackingAction(() =>
-      updateWorkoutExercisePerformanceAction({
-        date: dayDetails.day.planDate,
-        generatedPlanExerciseId: exercise.id,
-        completedSets: nextCompletedSets,
-        actualRepetitions: nextRepetitions,
-      }),
-    );
   };
 
   const handleSkipWorkout = () => {
@@ -510,9 +432,9 @@ function WorkoutDayScreenState({
                 ) : null
               ) : null}
             </div>
-            <div className="h-2 mt-2 mb-2 rounded-full bg-[var(--color-muted-bg)]">
+            <div className="mb-2 mt-2 h-2 rounded-full bg-[var(--color-muted-bg)]">
               <div
-                className="h-2  rounded-full bg-[var(--color-primary)] transition-all"
+                className="h-2 rounded-full bg-[var(--color-primary)] transition-all"
                 style={{ width: `${tracking.completionPercent}%` }}
               />
             </div>
@@ -591,10 +513,10 @@ function WorkoutDayScreenState({
                   const exerciseTracking = getExerciseTracking(tracking, exercise.id);
                   const completed = exerciseTracking?.completed ?? false;
                   const isExercisePending = isPending && pendingExerciseId === exercise.id;
-                  const draft = exerciseDrafts[exercise.id] ?? {
-                    completedSets: "",
-                    actualRepetitions: "",
-                  };
+                  const prescription = formatExercisePrescription(
+                    exercise.defaultSets,
+                    exercise.defaultRepetitionsOrDuration,
+                  );
 
                   return (
                     <ClientCard
@@ -621,9 +543,7 @@ function WorkoutDayScreenState({
                                 {exercise.exerciseName}
                               </h3>
                               <p className="text-sm text-[var(--color-text-secondary)]">
-                                {(exercise.requiredEquipmentNames.length > 0
-                                  ? exercise.requiredEquipmentNames.join(", ")
-                                  : "Bodyweight") + ` - ${exercise.category}`}
+                                {formatExerciseCategory(exercise)}
                               </p>
                             </div>
                             <div className="flex shrink-0 flex-col items-center gap-2">
@@ -662,80 +582,15 @@ function WorkoutDayScreenState({
                               </button>
                             </div>
                           </div>
-                          <div className="flex flex-wrap gap-2">
-                            {exercise.sets !== null ? (
-                              <Badge variant="outline">{exercise.sets} sets</Badge>
-                            ) : null}
-                            {exercise.repetitions ? (
-                              <Badge variant="outline">{exercise.repetitions}</Badge>
-                            ) : null}
-                            {exercise.durationMinutes !== null ? (
-                              <Badge variant="outline">{exercise.durationMinutes} mins</Badge>
-                            ) : null}
-                            {exercise.restSeconds !== null ? (
-                              <Badge variant="outline">Rest {exercise.restSeconds}s</Badge>
-                            ) : null}
-                          </div>
-                          <p className="whitespace-pre-line text-sm leading-6 text-[var(--color-text-secondary)]">
-                            {exercise.instructions ?? exercise.defaultInstructions}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-3">
-                        <div className="space-y-2">
-                          <label className="text-sm font-medium text-[var(--color-text)]">
-                            Completed sets
-                          </label>
-                          <Input
-                            inputMode="numeric"
-                            value={draft.completedSets}
-                            onChange={(event) =>
-                              handleExerciseDraftChange(
-                                exercise.id,
-                                "completedSets",
-                                event.target.value,
-                              )
-                            }
-                            onBlur={() => handleExerciseDraftBlur(exercise)}
-                            disabled={isReadOnly || isPending}
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <label className="text-sm font-medium text-[var(--color-text)]">
-                            Actual reps
-                          </label>
-                          <Input
-                            value={draft.actualRepetitions}
-                            onChange={(event) =>
-                              handleExerciseDraftChange(
-                                exercise.id,
-                                "actualRepetitions",
-                                event.target.value,
-                              )
-                            }
-                            onBlur={() => handleExerciseDraftBlur(exercise)}
-                            disabled={isReadOnly || isPending}
-                          />
+                          {prescription ? (
+                            <Badge variant="outline">{prescription}</Badge>
+                          ) : null}
                         </div>
                       </div>
                     </ClientCard>
                   );
                 })
               )}
-
-              {/* {hasExercises ? (
-                <Button
-                  variant="secondary"
-                  size="lg"
-                  className="w-full"
-                  leadingIcon={<AlertTriangle className="size-4" />}
-                  onClick={() => setReportOpen(true)}
-                  disabled={isPending}
-                >
-                  Report Difficulty or Pain
-                </Button>
-              ) : null} */}
             </div>
           ) : (
             <div
@@ -749,29 +604,21 @@ function WorkoutDayScreenState({
                   <Salad className="size-4 text-[var(--color-primary)]" />
                   <h3 className="font-semibold text-[var(--color-text)]">Daily Summary</h3>
                 </div>
-                {dayDetails.day.nutritionNotes ? (
-                  <p className="whitespace-pre-line text-sm leading-6 text-[var(--color-text-secondary)]">
-                    {dayDetails.day.nutritionNotes}
+                <p className="whitespace-pre-line text-sm leading-6 text-[var(--color-text-secondary)]">
+                  {DAILY_NUTRITION_SUMMARY}
+                </p>
+                {dayDetails.allergyRestrictionReminder ? (
+                  <p className="whitespace-pre-line text-sm text-[var(--color-text-secondary)]">
+                    {`ရှောင်ရန်:\n${dayDetails.allergyRestrictionReminder}`}
                   </p>
                 ) : null}
-                <p className="text-sm text-[var(--color-text-secondary)]">
-                  Allergy / restriction note: {dayDetails.allergyRestrictionReminder ?? "None"}
-                </p>
               </ClientCard>
 
               {Object.entries(groupedMeals).map(([mealType, items]) => (
                 <ClientCard key={mealType} className="space-y-3">
-                  <div className="flex items-center justify-between gap-3">
-                    <div>
-                      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-primary)]">
-                        {mealType}
-                      </p>
-                      <h3 className="font-semibold text-[var(--color-text)]">
-                        {items.length} item{items.length > 1 ? "s" : ""}
-                      </h3>
-                    </div>
-                    <Badge variant="outline">{mealType}</Badge>
-                  </div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-primary)]">
+                    {mealType}
+                  </p>
                   <div className="space-y-2 text-sm text-[var(--color-text-secondary)]">
                     {items.map((item) => (
                       <div
@@ -780,7 +627,6 @@ function WorkoutDayScreenState({
                       >
                         <p className="font-medium text-[var(--color-text)]">{item.foodName}</p>
                         {item.servingDescription ? <p>{item.servingDescription}</p> : null}
-                        {item.notes ? <p className="whitespace-pre-line">{item.notes}</p> : null}
                       </div>
                     ))}
                   </div>
@@ -793,31 +639,25 @@ function WorkoutDayScreenState({
       <Modal
         open={Boolean(instructionExercise)}
         title={instructionExercise?.exerciseName || "Exercise instructions"}
-        description="Stored workout instructions and generated notes"
+        description="Stored workout instructions and database prescription"
         onClose={() => setInstructionExercise(null)}
       >
         <div className="space-y-3 text-sm text-[var(--color-text-secondary)]">
           <p className="whitespace-pre-line leading-6 text-[var(--color-text-secondary)]">
-            {instructionExercise?.instructions ?? instructionExercise?.defaultInstructions}
+            {instructionExercise?.defaultInstructions}
           </p>
           <div className="space-y-2 rounded-2xl bg-[var(--color-muted-bg)] p-4">
             <p>
-              Equipment:{" "}
-              {instructionExercise?.requiredEquipmentNames.length
-                ? instructionExercise.requiredEquipmentNames.join(", ")
-                : "Bodyweight"}
+              Category: {instructionExercise ? formatExerciseCategory(instructionExercise) : "-"}
             </p>
-            {instructionExercise?.sets !== null ? (
-              <p>Sets: {instructionExercise?.sets}</p>
-            ) : null}
-            {instructionExercise?.repetitions ? (
-              <p>Repetitions: {instructionExercise.repetitions}</p>
-            ) : null}
-            {instructionExercise?.durationMinutes !== null ? (
-              <p>Duration: {instructionExercise?.durationMinutes} mins</p>
-            ) : null}
-            {instructionExercise?.restSeconds !== null ? (
-              <p>Rest: {instructionExercise?.restSeconds}s</p>
+            {instructionExercise ? (
+              <p>
+                Prescription:{" "}
+                {formatExercisePrescription(
+                  instructionExercise.defaultSets,
+                  instructionExercise.defaultRepetitionsOrDuration,
+                ) ?? "-"}
+              </p>
             ) : null}
           </div>
         </div>
